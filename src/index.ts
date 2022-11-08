@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import "reflect-metadata"
-import express from "express";
+import express, {Request, Response} from "express";
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 import {runDb} from "./db";
@@ -15,6 +15,10 @@ app.use(cors())
 app.use(cookieParser())
 app.use(express.json())
 app.set('trust proxy', true)
+
+app.use('/', async (req: Request, res: Response) => {
+    return res.send({'Hello Vercel!'})
+})
 
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
