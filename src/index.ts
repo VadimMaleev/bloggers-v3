@@ -17,7 +17,7 @@ app.use(express.json())
 app.set('trust proxy', true)
 
 app.use('/', async (req: Request, res: Response) => {
-    return res.send({'Hello Vercel!'})
+    return res.send({'Hello Vercel!': 'try2'})
 })
 
 app.use('/blogs', blogsRouter)
