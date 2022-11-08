@@ -33,7 +33,7 @@ blogsRouter.post('/',
     errorsMiddleware,
     createBlog)
 
-blogsRouter.put(':id',
+blogsRouter.put('/:id',
     basicAuthMiddleware,
     idParamValidation,
     youtubeUrlBloggersValidation,
@@ -41,7 +41,7 @@ blogsRouter.put(':id',
     errorsMiddleware,
     updateBlog)
 
-blogsRouter.delete('/id',
+blogsRouter.delete('/:id',
     basicAuthMiddleware,
     idParamValidation,
     deleteBlog)

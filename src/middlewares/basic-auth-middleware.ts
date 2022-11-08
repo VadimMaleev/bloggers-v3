@@ -7,6 +7,6 @@ export const basicAuthMiddleware = (req: Request, res: Response, next: NextFunct
     if (authHeader === encode) {
         next()
     } else {
-        res.send(401)
+        res.sendStatus(401)
     }
 }
