@@ -16,7 +16,7 @@ app.use(cookieParser())
 app.use(express.json())
 app.set('trust proxy', true)
 
-app.use('/', async (req: Request, res: Response) => {
+app.get('/', async (req: Request, res: Response) => {
     return res.send({'Hello Vercel!': 'try2'})
 })
 
