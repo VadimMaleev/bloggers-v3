@@ -18,8 +18,8 @@ export class BlogsRepository {
 
     async updateBlog (id: ObjectId, name: string, youtubeUrl: string): Promise<boolean> {
         try {
-            await BlogsModel.updateOne({id: id}, {$set: {name, youtubeUrl}})
-            return true
+            const result = await BlogsModel.findOneAndUpdate({id: id}, {$set: {name, youtubeUrl}})
+            return !!result
         } catch (e) {
             return false
         }

@@ -35,7 +35,6 @@ export class BlogsController {
     }
 
     async updateBlog(req: Request, res: Response) {
-        console.log('blogs controller')
         try {
             const isUpdated = await this.blogsService.updateBlog(new ObjectId(req.params.id), req.body.name, req.body.youtubeUrl)
             if (!isUpdated) return res.sendStatus(404)
