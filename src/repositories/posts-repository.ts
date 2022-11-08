@@ -10,11 +10,11 @@ export class PostsRepository {
     }
 
     async createPost(newPost: PostClass): Promise<PostForResponse> {
-        const postForResponse = {
+        const postForDB = {
             _id: new ObjectId(),
             ...newPost
         }
-        await PostsModel.insertMany(newPost)
-        return postForResponse
+        await PostsModel.insertMany(postForDB)
+        return newPost
     }
 }

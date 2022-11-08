@@ -20,9 +20,13 @@ export class BlogsController {
     }
 
     async getOneBlogById(req: Request, res: Response) {
-        const blog = await this.blogsQueryRepository.getOneBlogById(new ObjectId(req.params.id))
-        if(!blog) return res.sendStatus(404)
-        return res.status(200).send(blog)
+        try {
+            const blog = await this.blogsQueryRepository.getOneBlogById(new ObjectId(req.params.id))
+            if(!blog) return res.sendStatus(404)
+            return res.status(200).send(blog)
+        } catch (e) {
+            return res.sendStatus(404)
+        }
     }
 
     async createBlog(req: Request, res: Response) {
@@ -32,17 +36,27 @@ export class BlogsController {
 
     async updateBlog(req: Request, res: Response) {
         console.log('blogs controller')
-        const isUpdated = await this.blogsService.updateBlog(new ObjectId(req.params.id), req.body.name, req.body.youtubeUrl)
-        if (!isUpdated) return res.sendStatus(404)
-        return res.sendStatus(204)
+        try {
+            const isUpdated = await this.blogsService.updateBlog(new ObjectId(req.params.id), req.body.name, req.body.youtubeUrl)
+            if (!isUpdated) return res.sendStatus(404)
+            return res.sendStatus(204)
+            // isUpdated ? res.sendStatus(204) : res.sendStatus(404)
+        } catch (e) {
+            return res.sendStatus(404)
+        }
+
     }
 
     async deleteBlog(req: Request, res: Response) {
-        const isDeleted = await this.blogsService.deleteBlog(new ObjectId(req.params.id))
-        if(isDeleted) {
-            res.sendStatus(204)
-        } else {
-            res.sendStatus(404)
+        try {
+            const isDeleted = await this.blogsService.deleteBlog(new ObjectId(req.params.id))
+            if (isDeleted) {
+                res.sendStatus(204)
+            } else {
+                res.sendStatus(404)
+            }
+        } catch (e) {
+            return res.sendStatus(404)
         }
     }
 }

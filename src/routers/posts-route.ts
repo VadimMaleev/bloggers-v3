@@ -9,6 +9,7 @@ import {
     titlePostValidation,
 } from "../middlewares/posts-validation-middleware";
 import {errorsMiddleware} from "../middlewares/errors-validation-middleware";
+import {idParamValidation} from "../middlewares/bloggers-validation-middleware";
 
 export const postsRouter = Router({})
 
@@ -21,6 +22,8 @@ const createPost = postsController.createPost.bind(postsController)
 postsRouter.get('/', getPosts)
 
 postsRouter.get('/:id',
+    idParamValidation,
+    errorsMiddleware,
     getOnePost)
 
 postsRouter.post('/',

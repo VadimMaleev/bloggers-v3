@@ -35,7 +35,7 @@ blogsRouter.post('/',
 
 blogsRouter.put('/:id',
     basicAuthMiddleware,
-    idParamValidation,
+    //idParamValidation,
     youtubeUrlBloggersValidation,
     nameBloggersValidation,
     errorsMiddleware,
