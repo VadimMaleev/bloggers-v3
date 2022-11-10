@@ -25,6 +25,11 @@ describe('test', () => {
         youtubeUrl: 'https://youtube.com'
     }
 
+    const updatedBlog = {
+        name: 'vadim-jest-upd',
+        youtubeUrl: 'https://youtube.com/update'
+    }
+
 
     describe('wipe all data', () => {
 
@@ -105,6 +110,72 @@ describe('test', () => {
             expect(response.status).toBe(200)
             expect(response.body.name).toBe(validBlog.name)
             expect(response.body.youtubeUrl).toBe(validBlog.youtubeUrl)
+        })
+    })
+
+    describe('update blog', () => {
+        it('should return 401 error Unauthorized', async () => {
+            const response = await request(app).put(`${blogsUri}/${blogId}`)
+
+            expect(response).toBeDefined()
+            expect(response.status).toBe(401)
+        })
+
+        it ('should return error 404 if param not valid', async () => {
+            const response = await request(app).put(`${blogsUri}/${new ObjectId()}`).send(updatedBlog)
+                .set("Authorization", "Basic " + new Buffer("admin:qwerty").toString("base64"))
+
+            expect(response).toBeDefined()
+            expect(response.status).toBe(404)
+        })
+        it ('should return status 204', async () => {
+            const response = await request(app).put(`${blogsUri}/${blogId}`).send(updatedBlog)
+                .set("Authorization", "Basic " + new Buffer("admin:qwerty").toString("base64"))
+
+            expect(response).toBeDefined()
+            expect(response.status).toBe(204)
+        })
+
+        it ('should return updated blog', async () => {
+            const response = await request(app).get(`${blogsUri}/${blogId}`)
+
+            expect(response).toBeDefined()
+            expect(response.status).toBe(200)
+            expect(response.body.name).toBe(updatedBlog.name)
+            expect(response.body.youtubeUrl).toBe(updatedBlog.youtubeUrl)
+        })
+    })
+
+    describe('delete blog', () => {
+        it('should return 401 no BasicAuth', async () => {
+            const response = await request(app).delete(`${blogsUri}/${blogId}`)
+
+            expect(response).toBeDefined()
+            expect(response.status).toBe(401)
+        })
+
+        it('should return error 404 if param not valid', async () => {
+            const response = await request(app).delete(`${blogsUri}/${new ObjectId()}`)
+                .set("Authorization", "Basic " + new Buffer("admin:qwerty").toString("base64"))
+
+
+            expect(response).toBeDefined()
+            expect(response.status).toBe(404)
+        })
+
+        it('should return 204 status', async () => {
+            const response = await request(app).delete(`${blogsUri}/${blogId}`)
+                .set("Authorization", "Basic " + new Buffer("admin:qwerty").toString("base64"))
+
+            expect(response).toBeDefined()
+            expect(response.status).toBe(204)
+        })
+
+        it('should return 404 after deleting blog', async () => {
+            const response = await request(app).get(`${blogsUri}/${blogId}`)
+
+            expect(response).toBeDefined()
+            expect(response.status).toBe(404)
         })
     })
 })

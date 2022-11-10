@@ -21,12 +21,12 @@ export class PostClass {
     }
 }
 
-export type PostForResponse = {
-    title: string,
-    shortDescription: string,
-    content: string,
-    blogId: ObjectId
-    blogName: string
-}
+// export type PostForResponse = {
+//     title: string,
+//     shortDescription: string,
+//     content: string,
+//     blogId: ObjectId
+//     blogName: string
+// }
 
 

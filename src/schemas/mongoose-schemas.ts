@@ -13,7 +13,7 @@ const postsSchema = new mongoose.Schema<PostClass>({
     title: String,
     shortDescription: String,
     content: String,
-    blogId: String,
+    blogId: ObjectId,
     blogName: String
 }, {versionKey: false})
 

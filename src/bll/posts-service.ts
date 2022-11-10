@@ -13,17 +13,25 @@ export class PostsService {
     ) {
     }
 
-    async createPost(title: string, shortDescription: string, content: string, blogId: string){ //Promise<PostForResponse | null> {
-        const blogger =  await this.blogsQueryRepository.getOneBlogById(new ObjectId(blogId))
-        if (!blogger) return null
+    async createPost(title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<PostClass | null> {
+        const blog =  await this.blogsQueryRepository.getOneBlogById(new ObjectId(blogId))
+        if (!blog) return null
         const newPost = new PostClass(
             new ObjectId(),
             title,
             shortDescription,
             content,
             new ObjectId(blogId),
-            blogger.name
+            blog.name
         )
         return await this.postsRepository.createPost(newPost)
+    }
+
+    async updatePost (postId: ObjectId, title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<boolean> {
+        return this.postsRepository.updatePost(postId, title, shortDescription, content, blogId)
+    }
+
+    async deletePost(id: ObjectId): Promise<boolean> {
+        return this.postsRepository.deletePost(id)
     }
 }
