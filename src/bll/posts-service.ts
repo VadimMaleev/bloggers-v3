@@ -22,7 +22,8 @@ export class PostsService {
             shortDescription,
             content,
             new ObjectId(blogId),
-            blog.name
+            blog.name,
+            new Date()
         )
         return await this.postsRepository.createPost(newPost)
     }

@@ -13,7 +13,8 @@ export class BlogsService {
         const newBlog = new BlogClass(
             new ObjectId(),
             name,
-            youtubeUrl
+            youtubeUrl,
+            new Date()
         )
         return await this.blogsRepository.createBlog(newBlog)
     }

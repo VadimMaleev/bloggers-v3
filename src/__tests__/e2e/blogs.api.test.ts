@@ -80,7 +80,8 @@ describe('test blogs', () => {
             blogId = response.body.id
             expect(response).toBeDefined()
             expect(response.status).toBe(201)
-            expect(response.body).toStrictEqual({id: expect.any(String),...validBlog})
+            expect(response.body.name).toBe(validBlog.name)
+            expect(response.body.youtubeUrl).toBe(validBlog.youtubeUrl)
         })
     })
 
@@ -249,7 +250,8 @@ describe('test posts', () => {
             updatedPost.blogId = blogId
             expect(response).toBeDefined()
             expect(response.status).toBe(201)
-            expect(response.body).toStrictEqual({id: expect.any(String),...validBlog})
+            expect(response.body.name).toBe(validBlog.name)
+            expect(response.body.youtubeUrl).toBe(validBlog.youtubeUrl)
         })
     })
 
@@ -278,7 +280,9 @@ describe('test posts', () => {
             postId = response.body.id
             expect(response).toBeDefined()
             expect(response.status).toBe(201)
-            expect(response.body).toStrictEqual({id: expect.any(String),...validPost})
+            expect(response.body.title).toBe(validPost.title)
+            expect(response.body.shortDescription).toBe(validPost.shortDescription)
+            expect(response.body.content).toBe(validPost.content)
         })
     })
 

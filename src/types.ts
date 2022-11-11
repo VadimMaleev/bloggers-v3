@@ -4,7 +4,8 @@ export class BlogClass {
     constructor(
         public id: ObjectId,
         public name: string,
-        public youtubeUrl: string
+        public youtubeUrl: string,
+        public createdAt: Date
     ) {
     }
 }
@@ -16,8 +17,9 @@ export class PostClass {
         public shortDescription: string,
         public content: string,
         public blogId: ObjectId,
-        public blogName: string
-    ) {
+        public blogName: string,
+        public createdAt: Date
+) {
     }
 }
 
