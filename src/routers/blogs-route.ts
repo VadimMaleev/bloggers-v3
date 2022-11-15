@@ -7,6 +7,11 @@ import {
     youtubeUrlBloggersValidation
 } from "../middlewares/bloggers-validation-middleware";
 import {errorsMiddleware} from "../middlewares/errors-validation-middleware";
+import {
+    contentPostsValidation,
+    shortDescriptionPostValidation,
+    titlePostValidation
+} from "../middlewares/posts-validation-middleware";
 
 export const blogsRouter = Router({})
 
@@ -17,6 +22,8 @@ const getOneBlogById = blogsController.getOneBlogById.bind(blogsController)
 const createBlog = blogsController.createBlog.bind(blogsController)
 const updateBlog = blogsController.updateBlog.bind(blogsController)
 const deleteBlog = blogsController.deleteBlog.bind(blogsController)
+const createPostForBlog = blogsController.createPostForBlog.bind(blogsController)
+const getPostsForBlog = blogsController.getPostsForBlog.bind(blogsController)
 
 blogsRouter.get('/', getBlogs)
 
@@ -40,3 +47,14 @@ blogsRouter.put('/:id',
 blogsRouter.delete('/:id',
     basicAuthMiddleware,
     deleteBlog)
+
+blogsRouter.post('/:id/posts',
+    basicAuthMiddleware,
+    titlePostValidation,
+    shortDescriptionPostValidation,
+    contentPostsValidation,
+    errorsMiddleware,
+    createPostForBlog)
+
+blogsRouter.get('/:id/posts',
+    getPostsForBlog)

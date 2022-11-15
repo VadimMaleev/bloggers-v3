@@ -3,6 +3,9 @@ import {Request, Response} from "express";
 import {BlogsService} from "../../bll/blogs-service";
 import {BlogsQueryRepository} from "../../repositories/blogs-query-repository";
 import {ObjectId} from "mongodb";
+import {PostsService} from "../../bll/posts-service";
+import {PostsPagType} from "../../types";
+import {PostsQueryRepository} from "../../repositories/posts-query-repository";
 
 
 @injectable()
@@ -10,12 +13,23 @@ import {ObjectId} from "mongodb";
 export class BlogsController {
     constructor(
         @inject('bs') protected blogsService: BlogsService,
-        @inject('bqr') protected blogsQueryRepository: BlogsQueryRepository
+        @inject('bqr') protected blogsQueryRepository: BlogsQueryRepository,
+        @inject('ps') protected postsService: PostsService,
+        @inject('pqr') protected postsQueryRepository: PostsQueryRepository
     ) {
     }
 
     async getBlogs(req: Request, res: Response) {
-        const blogs = await this.blogsQueryRepository.getBlogs()
+        const page = isNaN(Number(req.query.PageNumber)) ? 1 : +req.query.PageNumber!
+        const pageSize = isNaN(Number(req.query.PageSize)) ? 10 : +req.query.PageSize!
+        const name = req.query.searchNameTerm?.toString() || ''
+        const sortBy = req.query.sortBy?.toString() || "createdAt"
+        let sortDirection: "desc" | "asc" = "desc"
+        if (req.query.sortDirection && req.query.sortDirection === "asc") {
+            sortDirection = "asc"
+        }
+
+        const blogs = await this.blogsQueryRepository.getBlogs(name, page, pageSize, sortBy, sortDirection)
         return res.status(200).send(blogs)
     }
 
@@ -54,6 +68,41 @@ export class BlogsController {
             } else {
                 res.sendStatus(404)
             }
+        } catch (e) {
+            return res.sendStatus(404)
+        }
+    }
+
+    async createPostForBlog (req: Request, res: Response) {
+        try {
+            const newPost = await this.postsService.createPost(
+                req.body.title,
+                req.body.shortDescription,
+                req.body.content,
+                new ObjectId(req.params.id)
+            )
+
+            if (newPost === null) return res.sendStatus(404)
+            res.status(201).send(newPost)
+
+        } catch (e) {
+            return res.sendStatus(404)
+        }
+    }
+
+    async getPostsForBlog (req: Request, res: Response) {
+        try {
+            const pageNumber = isNaN(Number(req.query.PageNumber)) ? 1 : +req.query.PageNumber!
+            const pageSize = isNaN(Number(req.query.PageSize)) ? 10 : +req.query.PageSize!
+            const sortBy = req.query.sortBy?.toString() || "createdAt"
+            let sortDirection: "desc" | "asc" = "desc"
+            if (req.query.sortDirection && req.query.sortDirection === "asc") {
+                sortDirection = "asc"
+            }
+
+            const postByBlogger: PostsPagType | null = await this.postsQueryRepository.getPostsForBlog(pageNumber, pageSize, new ObjectId(req.params.id), sortBy, sortDirection)
+            if (!postByBlogger) return res.sendStatus(404)
+             res.status(200).send(postByBlogger)
         } catch (e) {
             return res.sendStatus(404)
         }

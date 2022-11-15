@@ -23,12 +23,19 @@ export class PostClass {
     }
 }
 
-// export type PostForResponse = {
-//     title: string,
-//     shortDescription: string,
-//     content: string,
-//     blogId: ObjectId
-//     blogName: string
-// }
+export type BlogsPagType = {
+    pagesCount: number,
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: BlogClass[]
+}
 
+export type PostsPagType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items: PostClass[]
+}
 
