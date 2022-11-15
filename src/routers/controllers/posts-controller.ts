@@ -16,8 +16,8 @@ export class PostsController {
     }
 
     async getPosts(req: Request, res: Response) {
-        const page = isNaN(Number(req.query.PageNumber)) ? 1 : +req.query.PageNumber!
-        const pageSize = isNaN(Number(req.query.PageSize)) ? 10 : +req.query.PageSize!
+        const page = isNaN(Number(req.query.pageNumber)) ? 1 : +req.query.pageNumber!
+        const pageSize = isNaN(Number(req.query.pageSize)) ? 10 : +req.query.pageSize!
         const sortBy = req.query.sortBy?.toString() || "createdAt"
         let sortDirection: "desc" | "asc" = "desc"
         if (req.query.sortDirection && req.query.sortDirection === "asc") {
