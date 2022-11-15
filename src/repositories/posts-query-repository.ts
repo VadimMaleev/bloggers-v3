@@ -10,7 +10,7 @@ export class PostsQueryRepository {
     }
 
     async getPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: "asc" | "desc"): Promise<PostsPagType> {
-        const items = await PostsModel.find({})
+        const items = await PostsModel.find({}, {_id: 0})
             .sort({[sortBy]: sortDirection}).select({})
             .skip((pageNumber - 1) * pageSize).limit(pageSize).lean()
 
