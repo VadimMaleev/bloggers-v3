@@ -22,7 +22,7 @@ export class BlogsController {
     async getBlogs(req: Request, res: Response) {
         const page = isNaN(Number(req.query.pageNumber)) ? 1 : +req.query.pageNumber!
         const pageSize = isNaN(Number(req.query.pageSize)) ? 10 : +req.query.pageSize!
-        const name = req.query.searchNameTerm?.toString() || ''
+        const name = req.query.searchNameTerm?.toString().toLowerCase() || ''
         const sortBy = req.query.sortBy?.toString() || "createdAt"
         let sortDirection: "desc" | "asc" = "desc"
         if (req.query.sortDirection && req.query.sortDirection === "asc") {
