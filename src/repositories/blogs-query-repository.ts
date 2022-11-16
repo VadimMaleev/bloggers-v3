@@ -11,14 +11,15 @@ export class BlogsQueryRepository {
     }
 
     async getBlogs(name: string, page: number, pageSize: number, sortBy: string, sortDirection: "asc" | "desc"): Promise<BlogsPagType> {
-        const items = await BlogsModel.find({'name': {$regex: name}}, {_id: 0})
+        let searchTerm = `(?i)(${name})`
+        const items = await BlogsModel.find({'name': {$regex: searchTerm}}, {_id: 0})
             .sort({[sortBy]: sortDirection})
             .skip((page - 1) * pageSize).limit(pageSize).lean()
         return {
-            pagesCount: Math.ceil(await BlogsModel.count(({'name': {$regex: name}})) / pageSize),
+            pagesCount: Math.ceil(await BlogsModel.count(({'name': {$regex: searchTerm}})) / pageSize),
             page: page,
             pageSize: pageSize,
-            totalCount: await BlogsModel.count(({'name': {$regex: name}})),
+            totalCount: await BlogsModel.count(({'name': {$regex: searchTerm}})),
             items
 
         }
