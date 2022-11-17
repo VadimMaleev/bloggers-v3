@@ -30,6 +30,8 @@ describe('test blogs', () => {
     }
 
 
+
+
     describe('wipe all data', () => {
 
 
@@ -47,7 +49,7 @@ describe('test blogs', () => {
 
             expect(response).toBeDefined()
             expect(response.status).toBe(200)
-            expect(response.body).toStrictEqual([])
+            expect(response.body.items).toStrictEqual([])
         })
 
     })
@@ -91,8 +93,11 @@ describe('test blogs', () => {
             const response = await request(app).get(blogsUri)
             expect(response).toBeDefined()
             expect(response.status).toBe(200)
-            expect(response.body[0].name).toBe(validBlog.name)
-            expect(response.body[0].youtubeUrl).toBe(validBlog.youtubeUrl)
+            expect(response.body.pagesCount).toBe(1)
+            expect(response.body.page).toBe(1)
+            expect(response.body.totalCount).toBe(1)
+            expect(response.body.items[0].name).toBe(validBlog.name)
+            expect(response.body.items[0].youtubeUrl).toBe(validBlog.youtubeUrl)
 
         })
 
@@ -236,7 +241,7 @@ describe('test posts', () => {
 
             expect(response).toBeDefined()
             expect(response.status).toBe(200)
-            expect(response.body).toStrictEqual([])
+            expect(response.body.items).toStrictEqual([])
         })
     })
 
@@ -292,9 +297,12 @@ describe('test posts', () => {
 
             expect(response).toBeDefined()
             expect(response.status).toBe(200)
-            expect(response.body[0].title).toBe(validPost.title)
-            expect(response.body[0].shortDescription).toBe(validPost.shortDescription)
-            expect(response.body[0].content).toBe(validPost.content)
+            expect(response.body.pagesCount).toBe(1)
+            expect(response.body.page).toBe(1)
+            expect(response.body.totalCount).toBe(1)
+            expect(response.body.items[0].title).toBe(validPost.title)
+            expect(response.body.items[0].shortDescription).toBe(validPost.shortDescription)
+            expect(response.body.items[0].content).toBe(validPost.content)
         })
         it('should return 404 Error', async () => {
             const response = await request(app).get(`${postsUri}/${new ObjectId()}`)

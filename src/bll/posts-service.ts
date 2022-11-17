@@ -14,7 +14,7 @@ export class PostsService {
     }
 
     async createPost(title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<PostClass | null> {
-        const blog =  await this.blogsQueryRepository.getOneBlogById(new ObjectId(blogId))
+        const blog =  await this.blogsQueryRepository.getOneBlogById(blogId)
         if (!blog) return null
         const newPost = new PostClass(
             new ObjectId(),
