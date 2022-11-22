@@ -44,13 +44,13 @@ export class BlogsController {
     }
 
     async createBlog(req: Request, res: Response) {
-        const newBlog = await this.blogsService.createBlog(req.body.name, req.body.youtubeUrl)
+        const newBlog = await this.blogsService.createBlog(req.body.name, req.body.description, req.body.websiteUrl)
         res.status(201).send(newBlog)
     }
 
     async updateBlog(req: Request, res: Response) {
         try {
-            const isUpdated = await this.blogsService.updateBlog(new ObjectId(req.params.id), req.body.name, req.body.youtubeUrl)
+            const isUpdated = await this.blogsService.updateBlog(new ObjectId(req.params.id), req.body.name, req.body.description, req.body.websiteUrl)
             if (!isUpdated) return res.sendStatus(404)
             return res.sendStatus(204)
             // isUpdated ? res.sendStatus(204) : res.sendStatus(404)

@@ -16,17 +16,20 @@ describe('test blogs', () => {
 
     const invalidBlog = {
         name: '',
-        youtubeUrl: ''
+        description: '',
+        websiteUrl: ''
     }
 
     const validBlog = {
         name: 'vadim-jest',
-        youtubeUrl: 'https://youtube.com'
+        description: 'valid description',
+        websiteUrl: 'https://youtube.com'
     }
 
     const updatedBlog = {
         name: 'vadim-jest-upd',
-        youtubeUrl: 'https://youtube.com/update'
+        description: 'description update',
+        websiteUrl: 'https://youtube.com/update'
     }
 
 
@@ -70,9 +73,7 @@ describe('test blogs', () => {
             expect(response).toBeDefined()
             expect(response.status).toBe(400)
             expect(response.body.errorsMessages).toBeDefined()
-            expect(response.body.errorsMessages.length).toBe(2)
-            expect(response.body.errorsMessages[1].field).toBe('name')
-            expect(response.body.errorsMessages[0].field).toBe('youtubeUrl')
+            expect(response.body.errorsMessages.length).toBe(3)
         })
 
         it ('should return new blog', async () => {
@@ -83,7 +84,8 @@ describe('test blogs', () => {
             expect(response).toBeDefined()
             expect(response.status).toBe(201)
             expect(response.body.name).toBe(validBlog.name)
-            expect(response.body.youtubeUrl).toBe(validBlog.youtubeUrl)
+            expect(response.body.websiteUrl).toBe(validBlog.websiteUrl)
+            expect(response.body.description).toBe(validBlog.description)
         })
     })
 
@@ -97,8 +99,8 @@ describe('test blogs', () => {
             expect(response.body.page).toBe(1)
             expect(response.body.totalCount).toBe(1)
             expect(response.body.items[0].name).toBe(validBlog.name)
-            expect(response.body.items[0].youtubeUrl).toBe(validBlog.youtubeUrl)
-
+            expect(response.body.items[0].description).toBe(validBlog.description)
+            expect(response.body.items[0].websiteUrl).toBe(validBlog.websiteUrl)
         })
 
         it('should return 404', async () => {
@@ -114,7 +116,8 @@ describe('test blogs', () => {
             expect(response).toBeDefined()
             expect(response.status).toBe(200)
             expect(response.body.name).toBe(validBlog.name)
-            expect(response.body.youtubeUrl).toBe(validBlog.youtubeUrl)
+            expect(response.body.description).toBe(validBlog.description)
+            expect(response.body.websiteUrl).toBe(validBlog.websiteUrl)
         })
     })
 
@@ -147,7 +150,8 @@ describe('test blogs', () => {
             expect(response).toBeDefined()
             expect(response.status).toBe(200)
             expect(response.body.name).toBe(updatedBlog.name)
-            expect(response.body.youtubeUrl).toBe(updatedBlog.youtubeUrl)
+            expect(response.body.description).toBe(updatedBlog.description)
+            expect(response.body.websiteUrl).toBe(updatedBlog.websiteUrl)
         })
     })
 
@@ -199,7 +203,8 @@ describe('test posts', () => {
 
     const validBlog = {
         name: 'vadim-jest',
-        youtubeUrl: 'https://youtube.com'
+        description: 'valid description',
+        websiteUrl: 'https://youtube.com'
     }
 
     const validPost = {
@@ -256,7 +261,8 @@ describe('test posts', () => {
             expect(response).toBeDefined()
             expect(response.status).toBe(201)
             expect(response.body.name).toBe(validBlog.name)
-            expect(response.body.youtubeUrl).toBe(validBlog.youtubeUrl)
+            expect(response.body.description).toBe(validBlog.description)
+            expect(response.body.websiteUrl).toBe(validBlog.websiteUrl)
         })
     })
 

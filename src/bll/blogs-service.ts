@@ -9,18 +9,19 @@ export class BlogsService {
         @inject('br') protected blogsRepository: BlogsRepository
     ) {
     }
-    async createBlog (name: string, youtubeUrl: string): Promise<BlogClass> {
+    async createBlog (name: string, description: string, websiteUrl: string): Promise<BlogClass> {
         const newBlog = new BlogClass(
             new ObjectId(),
             name,
-            youtubeUrl,
+            description,
+            websiteUrl,
             new Date()
         )
         return await this.blogsRepository.createBlog(newBlog)
     }
 
-    async updateBlog (id: ObjectId, name: string, youtubeUrl: string): Promise<boolean> {
-        return this.blogsRepository.updateBlog(id, name, youtubeUrl)
+    async updateBlog (id: ObjectId, name: string, description: string, websiteUrl: string): Promise<boolean> {
+        return this.blogsRepository.updateBlog(id, name, description, websiteUrl)
     }
 
     async deleteBlog (id: ObjectId): Promise<boolean> {

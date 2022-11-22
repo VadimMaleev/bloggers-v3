@@ -1,9 +1,8 @@
-import {body, param} from "express-validator";
+import {body} from "express-validator";
 
-export const nameBloggersValidation =
+export const nameBlogsValidation =
     body('name').isString().trim().isLength({min:3, max:15})
-export const youtubeUrlBloggersValidation =
-    body('youtubeUrl').isString().trim().isURL({protocols: ['https']}).isLength({min: 3, max: 100})
-
-export const idParamValidation =
-    param('id').isMongoId()
+export const descriptionBlogsValidation =
+    body('description').isString().trim().isLength({min:3, max: 500})
+export const websiteUrlBlogsValidation =
+    body('websiteUrl').isString().trim().isURL({protocols: ['https']}).isLength({min: 3, max: 100})

@@ -5,7 +5,8 @@ import {ObjectId} from "mongodb";
 const blogsSchema = new mongoose.Schema<BlogClass>({
     id: ObjectId,
     name: String,
-    youtubeUrl: String,
+    description: String,
+    websiteUrl: String,
     createdAt: Date
 }, {versionKey: false})
 

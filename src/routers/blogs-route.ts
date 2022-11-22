@@ -3,8 +3,9 @@ import {BlogsController} from "./controllers/blogs-controller";
 import {container} from "../composition-root";
 import {basicAuthMiddleware} from "../middlewares/basic-auth-middleware";
 import {
-    nameBloggersValidation,
-    youtubeUrlBloggersValidation
+    descriptionBlogsValidation,
+    nameBlogsValidation,
+    websiteUrlBlogsValidation,
 } from "../middlewares/bloggers-validation-middleware";
 import {errorsMiddleware} from "../middlewares/errors-validation-middleware";
 import {
@@ -32,15 +33,17 @@ blogsRouter.get('/:id',
 
 blogsRouter.post('/',
     basicAuthMiddleware,
-    youtubeUrlBloggersValidation,
-    nameBloggersValidation,
+    nameBlogsValidation,
+    descriptionBlogsValidation,
+    websiteUrlBlogsValidation,
     errorsMiddleware,
     createBlog)
 
 blogsRouter.put('/:id',
     basicAuthMiddleware,
-    youtubeUrlBloggersValidation,
-    nameBloggersValidation,
+    nameBlogsValidation,
+    descriptionBlogsValidation,
+    websiteUrlBlogsValidation,
     errorsMiddleware,
     updateBlog)
 

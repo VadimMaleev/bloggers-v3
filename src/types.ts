@@ -4,7 +4,8 @@ export class BlogClass {
     constructor(
         public id: ObjectId,
         public name: string,
-        public youtubeUrl: string,
+        public description: string,
+        public websiteUrl: string,
         public createdAt: Date
     ) {
     }
