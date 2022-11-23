@@ -8,6 +8,11 @@ import {PostsController} from "./routers/controllers/posts-controller";
 import {PostsQueryRepository} from "./repositories/posts-query-repository";
 import {PostsService} from "./bll/posts-service";
 import {PostsRepository} from "./repositories/posts-repository";
+import {UsersController} from "./routers/controllers/users-controller";
+import {UsersQueryRepository} from "./repositories/users-query-repository";
+import {UsersService} from "./bll/users-service";
+import {AuthService} from "./bll/auth-service";
+import {UsersRepository} from "./repositories/users-repository";
 
 export const container = new Container()
 
@@ -20,3 +25,10 @@ container.bind<PostsController>(PostsController).to(PostsController)
 container.bind<PostsService>('ps').to(PostsService)
 container.bind<PostsQueryRepository>('pqr').to(PostsQueryRepository);
 container.bind<PostsRepository>('pr').to(PostsRepository)
+
+container.bind<UsersController>(UsersController).to(UsersController)
+container.bind<UsersService>('us').to(UsersService)
+container.bind<UsersRepository>('ur').to(UsersRepository);
+container.bind<UsersQueryRepository>('uqr').to(UsersQueryRepository);
+
+container.bind<AuthService>('as').to(AuthService)

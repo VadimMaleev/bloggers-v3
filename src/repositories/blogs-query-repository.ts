@@ -21,7 +21,6 @@ export class BlogsQueryRepository {
             pageSize: pageSize,
             totalCount: await BlogsModel.count(({'name': {$regex: searchTerm}})),
             items
-
         }
     }
 

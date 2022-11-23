@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {BlogClass, PostClass} from "../types";
+import {BlogClass, PostClass, UserClass} from "../types";
 import {ObjectId} from "mongodb";
 
 const blogsSchema = new mongoose.Schema<BlogClass>({
@@ -20,5 +20,14 @@ const postsSchema = new mongoose.Schema<PostClass>({
     createdAt: Date
 }, {versionKey: false})
 
+const usersSchema = new mongoose.Schema<UserClass>({
+    id: ObjectId,
+    login: String,
+    email: String,
+    passwordHash: String,
+    createdAt: Date
+}, {versionKey: false})
+
 export const BlogsModel = mongoose.model('blogs', blogsSchema)
 export const PostsModel = mongoose.model('posts', postsSchema)
+export const UsersModel = mongoose.model('users', usersSchema)

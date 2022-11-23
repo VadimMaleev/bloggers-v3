@@ -24,6 +24,17 @@ export class PostClass {
     }
 }
 
+export class UserClass {
+    constructor(
+        public id: ObjectId,
+        public login: string,
+        public email: string,
+        public passwordHash: string,
+        public createdAt: Date
+    ) {
+    }
+}
+
 export type BlogsPagType = {
     pagesCount: number,
     page: number,
@@ -38,5 +49,20 @@ export type PostsPagType = {
     pageSize: number
     totalCount: number
     items: PostClass[]
+}
+
+export type UserForResponse = {
+    id: ObjectId,
+    login: string,
+    email: string,
+    createdAt: Date
+}
+
+export type UsersPagType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items: UserForResponse[]
 }
 

@@ -7,6 +7,7 @@ import {runDb} from "./db";
 import {blogsRouter} from "./routers/blogs-route";
 import {postsRouter} from "./routers/posts-route";
 import {testingRouter} from "./routers/testing-route";
+import {usersRouter} from "./routers/users-route";
 
 export const app = express()
 const port = process.env.PORT || 5000
@@ -23,6 +24,7 @@ app.get('/', async (req: Request, res: Response) => {
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/testing', testingRouter)
+app.use('/users', usersRouter)
 
 const startApp = async () => {
     await runDb()
