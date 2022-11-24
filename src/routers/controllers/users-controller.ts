@@ -22,7 +22,7 @@ export class UsersController {
             sortDirection = "asc"
         }
         const login = req.query.searchLoginTerm?.toString() || ''
-        const email = req.query.serchEmailTerm?.toString() || ''
+        const email = req.query.searchEmailTerm?.toString() || ''
 
         const users = await this.usersQueryRepository.getUsers(login, email, page, pageSize, sortBy, sortDirection)
         return res.status(200).send(users)

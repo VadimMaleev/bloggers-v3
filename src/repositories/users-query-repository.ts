@@ -16,7 +16,7 @@ export class UsersQueryRepository {
         if (email) {
             query.push({'email': {$regex: `(?i)(${email})`}})
         }
-
+        console.log(email, login)
         const queryFetch = query.length ? {$or: query} : {}
 
         const items = await UsersModel.find( queryFetch, {_id: 0, passwordHash: 0})
