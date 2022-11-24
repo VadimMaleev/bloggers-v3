@@ -22,6 +22,7 @@ usersRouter.get('/',
     getUsers)
 
 usersRouter.post('/',
+    basicAuthMiddleware,
     loginUsersValidation,
     emailUsersValidation,
     passwordUsersValidation,
