@@ -18,6 +18,9 @@ export class UsersController {
         const pageSize = isNaN(Number(req.query.pageSize)) ? 10 : +req.query.pageSize!
         const sortBy = req.query.sortBy?.toString() || "createdAt"
         let sortDirection: "desc" | "asc" = "desc"
+        if (req.query.sortDirection && req.query.sortDirection === "asc") {
+            sortDirection = "asc"
+        }
         const login = req.query.loginSearchTerm?.toString() || ''
         const email = req.query.emailSearchTerm?.toString() || ''
 
