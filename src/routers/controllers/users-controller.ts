@@ -21,8 +21,8 @@ export class UsersController {
         if (req.query.sortDirection && req.query.sortDirection === "asc") {
             sortDirection = "asc"
         }
-        const login = req.query.loginSearchTerm?.toString() || ''
-        const email = req.query.emailSearchTerm?.toString() || ''
+        const login = req.query.searchLoginTerm?.toString() || ''
+        const email = req.query.serchEmailTerm?.toString() || ''
 
         const users = await this.usersQueryRepository.getUsers(login, email, page, pageSize, sortBy, sortDirection)
         return res.status(200).send(users)
