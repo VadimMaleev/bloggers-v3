@@ -16,15 +16,18 @@ export class UsersQueryRepository {
         if (email) {
             query.push({'email': {$regex: `(?i)(${email})`}})
         }
-        const items = await UsersModel.find({$or: query}, {_id: 0, passwordHash: 0})
+
+        const queryFetch = query.length ? {$or: query} : {}
+
+        const items = await UsersModel.find( queryFetch, {_id: 0, passwordHash: 0})
             .sort({[sortBy]: sortDirection})
             .skip((page - 1) * pageSize).limit(pageSize).lean()
 
         return {
-            pagesCount: Math.ceil(await UsersModel.count({$or: query}) / pageSize),
+            pagesCount: Math.ceil(await UsersModel.count(queryFetch) / pageSize),
             page: page,
             pageSize: pageSize,
-            totalCount: await UsersModel.count({$or: query}),
+            totalCount: await UsersModel.count(queryFetch),
             items
         }
     }
