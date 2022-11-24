@@ -13,6 +13,7 @@ import {UsersQueryRepository} from "./repositories/users-query-repository";
 import {UsersService} from "./bll/users-service";
 import {AuthService} from "./bll/auth-service";
 import {UsersRepository} from "./repositories/users-repository";
+import {AuthController} from "./routers/controllers/auth-controller";
 
 export const container = new Container()
 
@@ -31,4 +32,5 @@ container.bind<UsersService>('us').to(UsersService)
 container.bind<UsersRepository>('ur').to(UsersRepository);
 container.bind<UsersQueryRepository>('uqr').to(UsersQueryRepository);
 
+container.bind<AuthController>(AuthController).to(AuthController)
 container.bind<AuthService>('as').to(AuthService)

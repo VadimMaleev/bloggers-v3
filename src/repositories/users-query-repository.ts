@@ -28,4 +28,8 @@ export class UsersQueryRepository {
             items
         }
     }
+
+    async findUserByLoginOrEmail (loginOrEmail: string) {
+        return UsersModel.findOne({$or: [{'login': loginOrEmail}, {'email': loginOrEmail}]})
+    }
 }
