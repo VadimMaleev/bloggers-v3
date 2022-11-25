@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {BlogClass, PostClass, UserClass} from "../types";
+import {BlogClass, PostClass, UserClass} from "../types/types";
 import {ObjectId} from "mongodb";
 
 const blogsSchema = new mongoose.Schema<BlogClass>({

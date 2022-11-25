@@ -1,6 +1,6 @@
 import {injectable} from "inversify";
 import {BlogsModel, PostsModel} from "../schemas/mongoose-schemas";
-import {PostClass, PostsPagType} from "../types";
+import {PostClass, PostsPagType} from "../types/types";
 import {ObjectId} from "mongodb";
 
 @injectable()

@@ -1,5 +1,5 @@
 import {inject, injectable} from "inversify";
-import {BlogClass} from "../types";
+import {BlogClass} from "../types/types";
 import {BlogsRepository} from "../repositories/blogs-repository";
 import {ObjectId} from "mongodb";
 

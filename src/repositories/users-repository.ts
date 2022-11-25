@@ -1,5 +1,5 @@
 import {injectable} from "inversify";
-import {UserClass} from "../types";
+import {UserClass} from "../types/types";
 import {UsersModel} from "../schemas/mongoose-schemas";
 import {ObjectId} from "mongodb";
 

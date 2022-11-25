@@ -4,7 +4,7 @@ import {BlogsService} from "../../bll/blogs-service";
 import {BlogsQueryRepository} from "../../repositories/blogs-query-repository";
 import {ObjectId} from "mongodb";
 import {PostsService} from "../../bll/posts-service";
-import {PostsPagType} from "../../types";
+import {PostsPagType} from "../../types/types";
 import {PostsQueryRepository} from "../../repositories/posts-query-repository";
 
 

@@ -1,6 +1,6 @@
 import "reflect-metadata"
 import {inject, injectable} from "inversify";
-import {PostClass} from "../types";
+import {PostClass} from "../types/types";
 import {BlogsQueryRepository} from "../repositories/blogs-query-repository";
 import {ObjectId} from "mongodb";
 import {PostsRepository} from "../repositories/posts-repository";

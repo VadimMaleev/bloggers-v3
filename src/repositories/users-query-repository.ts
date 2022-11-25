@@ -1,6 +1,7 @@
 import {injectable} from "inversify";
-import {UsersPagType} from "../types";
+import {UserClass, UsersPagType} from "../types/types";
 import {UsersModel} from "../schemas/mongoose-schemas";
+import {ObjectId} from "mongodb";
 
 @injectable()
 
@@ -16,7 +17,6 @@ export class UsersQueryRepository {
         if (email) {
             query.push({'email': {$regex: `(?i)(${email})`}})
         }
-        console.log(email, login)
         const queryFetch = query.length ? {$or: query} : {}
 
         const items = await UsersModel.find( queryFetch, {_id: 0, passwordHash: 0})
@@ -34,5 +34,9 @@ export class UsersQueryRepository {
 
     async findUserByLoginOrEmail (loginOrEmail: string) {
         return UsersModel.findOne({$or: [{'login': loginOrEmail}, {'email': loginOrEmail}]})
+    }
+
+    async findUserById(userId: ObjectId): Promise<UserClass | null> {
+        return UsersModel.findOne({id: userId})
     }
 }

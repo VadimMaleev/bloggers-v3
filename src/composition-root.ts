@@ -14,6 +14,8 @@ import {UsersService} from "./bll/users-service";
 import {AuthService} from "./bll/auth-service";
 import {UsersRepository} from "./repositories/users-repository";
 import {AuthController} from "./routers/controllers/auth-controller";
+import {JWTService} from "./bll/jwt-service";
+import {JwtRepository} from "./repositories/jwt-repository";
 
 export const container = new Container()
 
@@ -34,3 +36,7 @@ container.bind<UsersQueryRepository>('uqr').to(UsersQueryRepository);
 
 container.bind<AuthController>(AuthController).to(AuthController)
 container.bind<AuthService>('as').to(AuthService)
+
+
+container.bind<JWTService>('js').to(JWTService)
+container.bind<JwtRepository>('jr').to(JwtRepository)

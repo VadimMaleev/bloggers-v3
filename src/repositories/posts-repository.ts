@@ -1,5 +1,5 @@
 import "reflect-metadata"
-import {PostClass} from "../types";
+import {PostClass} from "../types/types";
 import {ObjectId} from "mongodb";
 import {PostsModel} from "../schemas/mongoose-schemas";
 import {injectable} from "inversify";

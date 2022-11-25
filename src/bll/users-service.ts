@@ -1,5 +1,5 @@
 import {inject, injectable} from "inversify";
-import {UserClass, UserForResponse} from "../types";
+import {UserClass, UserForResponse} from "../types/types";
 import {AuthService} from "./auth-service";
 import {ObjectId} from "mongodb";
 import {UsersRepository} from "../repositories/users-repository";

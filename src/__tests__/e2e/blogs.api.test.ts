@@ -401,10 +401,12 @@ describe('test users', () => {
         expect(true).toBeTruthy()
     })
 
+    let token = ''
     let userId = ''
     const deleteUri = '/testing/all-data'
     const usersUri = '/users'
     const loginUri = '/auth/login'
+    const aboutMeUri = '/auth/me'
 
     const validUser = {
         login: 'loginTEST',
@@ -520,9 +522,22 @@ describe('test users', () => {
             expect(response.status).toBe(401)
         })
 
-        it('should return 204 status', async () => {
+        it('should return 200 status', async () => {
             const response = await request(app).post(loginUri).send(loginValidUser)
-            expect(response.status).toBe(204)
+            token = response.body.accessToken
+            expect(response.status).toBe(200)
+            expect(response.body.accessToken).toBeDefined()
+        })
+
+        it('should return user info', async () => {
+            const response = await request(app).get(aboutMeUri)
+                .set("Authorization", "Bearer " + token)
+
+            expect(response).toBeDefined()
+            expect(response.status).toBe(200)
+            expect(response.body.email).toBe(validUser.email)
+            expect(response.body.login).toBe(validUser.login)
+            expect(response.body.userId).toBe(userId)
         })
     })
 
