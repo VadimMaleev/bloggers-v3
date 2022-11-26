@@ -6,7 +6,7 @@ import {ObjectId} from "mongodb";
 
 export const jwtAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-        res.send(401)
+        res.sendStatus(401)
         return
     }
     const usersQueryRepository = container.resolve(UsersQueryRepository)
@@ -16,9 +16,9 @@ export const jwtAuthMiddleware = async (req: Request, res: Response, next: NextF
     if(_userId) {
         const userId = new ObjectId(_userId)
         req.user = await usersQueryRepository.findUserById(userId)
-        console.log(req.user)
+        if(!req.user) return res.sendStatus(401)
         next()
     } else {
-        return res.send(401)
+        return res.sendStatus(401)
     }
 }

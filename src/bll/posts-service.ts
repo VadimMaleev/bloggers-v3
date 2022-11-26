@@ -29,7 +29,7 @@ export class PostsService {
     }
 
     async updatePost (postId: ObjectId, title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<boolean> {
-        return this.postsRepository.updatePost(postId, title, shortDescription, content, blogId)
+        return await this.postsRepository.updatePost(postId, title, shortDescription, content, blogId)
     }
 
     async deletePost(id: ObjectId): Promise<boolean> {

@@ -287,7 +287,6 @@ describe('test posts', () => {
         it ('should return new Post', async () => {
             const response = await request(app).post(postsUri).send(validPost)
                 .set("Authorization", "Basic " + new Buffer("admin:qwerty").toString("base64"))
-            console.log(validPost.blogId)
             postId = response.body.id
             expect(response).toBeDefined()
             expect(response.status).toBe(201)
@@ -528,6 +527,7 @@ describe('test users', () => {
             expect(response.status).toBe(200)
             expect(response.body.accessToken).toBeDefined()
         })
+
 
         it('should return user info', async () => {
             const response = await request(app).get(aboutMeUri)

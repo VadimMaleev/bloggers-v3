@@ -19,7 +19,6 @@ export class JWTService {
     async extractUserIdFromToken(token: string): Promise<ObjectId | null> {
         try {
             const result: any = jwt.verify(token, settings.JWT_SECRET)
-            console.log({userid: result.userId})
             return result.userId
         } catch (error) {
             return null

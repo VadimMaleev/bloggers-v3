@@ -9,6 +9,8 @@ import {
     titlePostValidation,
 } from "../middlewares/posts-validation-middleware";
 import {errorsMiddleware} from "../middlewares/errors-validation-middleware";
+import {jwtAuthMiddleware} from "../middlewares/jwt-auth-middleware";
+import {commentsValidation} from "../middlewares/comment-validation-middleware";
 
 
 export const postsRouter = Router({})
@@ -20,6 +22,8 @@ const getOnePost = postsController.getOnePostById.bind(postsController)
 const createPost = postsController.createPost.bind(postsController)
 const updatePost = postsController.updatePost.bind(postsController)
 const deletePost = postsController.deletePost.bind(postsController)
+const createComment = postsController.createComment.bind(postsController)
+const getCommentsForPost = postsController.getCommentsForPost.bind(postsController)
 
 postsRouter.get('/', getPosts)
 
@@ -47,4 +51,13 @@ postsRouter.put('/:id',
 postsRouter.delete('/:id',
     basicAuthMiddleware,
     deletePost)
+
+postsRouter.post('/:id/comments',
+    jwtAuthMiddleware,
+    commentsValidation,
+    errorsMiddleware,
+    createComment)
+
+postsRouter.get('/:id/comments',
+    getCommentsForPost)
 

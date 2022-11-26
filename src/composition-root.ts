@@ -16,6 +16,10 @@ import {UsersRepository} from "./repositories/users-repository";
 import {AuthController} from "./routers/controllers/auth-controller";
 import {JWTService} from "./bll/jwt-service";
 import {JwtRepository} from "./repositories/jwt-repository";
+import {CommentsService} from "./bll/comments-service";
+import {CommentsQueryRepository} from "./repositories/comments-query-repository";
+import {CommentsRepository} from "./repositories/comments-repository";
+import {CommentsController} from "./routers/controllers/comments-controller";
 
 export const container = new Container()
 
@@ -40,3 +44,8 @@ container.bind<AuthService>('as').to(AuthService)
 
 container.bind<JWTService>('js').to(JWTService)
 container.bind<JwtRepository>('jr').to(JwtRepository)
+
+container.bind<CommentsController>(CommentsController).to(CommentsController)
+container.bind<CommentsService>('cs').to(CommentsService)
+container.bind<CommentsRepository>('cr').to(CommentsRepository);
+container.bind<CommentsQueryRepository>('cqr').to(CommentsQueryRepository);

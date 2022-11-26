@@ -66,3 +66,30 @@ export type UsersPagType = {
     items: UserForResponse[]
 }
 
+export class CommentClass {
+    constructor(
+        public id: ObjectId,
+        public content: string,
+        public userId: ObjectId,
+        public userLogin: string,
+        public createdAt: Date,
+        public postId: ObjectId
+    ) {     }
+}
+
+export type CommentForResponse = {
+    id: ObjectId,
+    content: string,
+    userId: ObjectId,
+    userLogin: string,
+    createdAt: Date
+}
+
+export type CommentsPagType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items: CommentForResponse[]
+}
+
