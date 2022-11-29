@@ -27,7 +27,7 @@ export class CommentsController {
         try {
             const comment = await this.commentsQueryRepository.getCommentById(new ObjectId(req.params.id))
             if(!comment) return res.sendStatus(404)
-            if(comment.userId !== req.user!.id) return res.sendStatus(403)
+            if(comment.userId.toHexString() !== req.user!.id.toHexString()) return res.sendStatus(403)
 
             const isUpdated = await this.commentsService.updateComment(new ObjectId(req.params.id), req.body.content)
             if(!isUpdated) return res.sendStatus(404)
@@ -41,7 +41,7 @@ export class CommentsController {
         try {
             const comment = await this.commentsQueryRepository.getCommentById(new ObjectId(req.params.id))
             if (!comment) return res.sendStatus(404)
-            if(comment.userId !== req.user!.id) return res.sendStatus(403)
+            if(comment.userId.toHexString() !== req.user!.id.toHexString()) return res.sendStatus(403)
 
             const isDeleted = await this.commentsService.deleteComment(new ObjectId(req.params.id))
             if (!isDeleted) return res.sendStatus(404)
