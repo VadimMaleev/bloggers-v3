@@ -36,7 +36,19 @@ export class UsersQueryRepository {
         return UsersModel.findOne({$or: [{'login': loginOrEmail}, {'email': loginOrEmail}]})
     }
 
+    async findUserByEmail (email: string): Promise<UserClass | null> {
+        return UsersModel.findOne({email: email})
+    }
+
+    async findUserByLogin (login: string): Promise<UserClass | null> {
+        return UsersModel.findOne({login: login})
+    }
+
     async findUserById(userId: ObjectId): Promise<UserClass | null> {
         return UsersModel.findOne({id: userId})
+    }
+
+    async findUserByCode (code: string):Promise<UserClass | null> {
+        return UsersModel.findOne({confirmationCode: code})
     }
 }

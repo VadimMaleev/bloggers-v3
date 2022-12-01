@@ -16,10 +16,32 @@ export class UsersRepository {
         await userInstance.save()
     }
 
+    async updateConfirmation(id: ObjectId) {
+        const confirmationInstance =  await UsersModel.findOne({id: id})
+        if (!confirmationInstance) return false
+
+        confirmationInstance.isConfirmed = true
+
+        await confirmationInstance.save()
+        return true
+    }
+
+    async updateConfirmCode(user: UserClass, confirmCode: string, expirationDate: Date) {
+        const confirmationInstance = await UsersModel.findOne({id: user.id})
+        if (!confirmationInstance) return null
+
+        confirmationInstance.confirmationCode = confirmCode
+        confirmationInstance.codeExpirationDate = expirationDate
+
+        await confirmationInstance.save()
+    }
+
     async deleteUser(id: ObjectId): Promise<boolean> {
         const userInstance = await UsersModel.findOne({id: id})
         if(!userInstance) return false
         await userInstance.deleteOne()
         return true
     }
+
+
 }

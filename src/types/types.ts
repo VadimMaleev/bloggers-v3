@@ -30,7 +30,10 @@ export class UserClass {
         public login: string,
         public email: string,
         public passwordHash: string,
-        public createdAt: Date
+        public createdAt: Date,
+        public confirmationCode: string,
+        public codeExpirationDate: Date,
+        public isConfirmed: boolean
     ) {
     }
 }

@@ -20,6 +20,7 @@ import {CommentsService} from "./bll/comments-service";
 import {CommentsQueryRepository} from "./repositories/comments-query-repository";
 import {CommentsRepository} from "./repositories/comments-repository";
 import {CommentsController} from "./routers/controllers/comments-controller";
+import {EmailAdapter} from "./adapters/email-adapter";
 
 export const container = new Container()
 
@@ -44,6 +45,9 @@ container.bind<AuthService>('as').to(AuthService)
 
 container.bind<JWTService>('js').to(JWTService)
 container.bind<JwtRepository>('jr').to(JwtRepository)
+
+container.bind<EmailAdapter>('ea').to(EmailAdapter)
+
 
 container.bind<CommentsController>(CommentsController).to(CommentsController)
 container.bind<CommentsService>('cs').to(CommentsService)

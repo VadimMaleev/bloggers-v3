@@ -25,7 +25,10 @@ const usersSchema = new mongoose.Schema<UserClass>({
     login: String,
     email: String,
     passwordHash: String,
-    createdAt: Date
+    createdAt: Date,
+    confirmationCode: String,
+    codeExpirationDate: Date,
+    isConfirmed: Boolean
 }, {versionKey: false})
 
 const commentsSchema = new mongoose.Schema<CommentClass>({
