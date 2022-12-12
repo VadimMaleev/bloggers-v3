@@ -3,7 +3,7 @@ import {container} from "../composition-root";
 import {AuthController} from "./controllers/auth-controller";
 import {loginOrEmailAuthValidation, passwordAuthValidation} from "../middlewares/login-validation-middleware";
 import {errorsMiddleware} from "../middlewares/errors-validation-middleware";
-import {jwtAuthMiddleware} from "../middlewares/jwt-auth-middleware";
+import {jwtAuthMiddleware, jwtRefreshAuthMiddleware} from "../middlewares/jwt-auth-middleware";
 import {
     emailUsersValidation,
     loginUsersValidation,
@@ -19,6 +19,8 @@ const aboutMe = authController.aboutMe.bind(authController)
 const registration = authController.registration.bind(authController)
 const confirmation = authController.confirmation.bind(authController)
 const emailResending = authController.emailResending.bind(authController)
+const createTokens = authController.createTokens.bind(authController)
+const logout = authController.logout.bind(authController)
 
 authRouter.post('/login',
     loginOrEmailAuthValidation,
@@ -41,6 +43,14 @@ authRouter.post('/registration-email-resending',
     errorsMiddleware,
     emailResending
 )
+
+authRouter.post('/refresh-token',
+    jwtRefreshAuthMiddleware,
+    createTokens)
+
+authRouter.post('/logout',
+    jwtRefreshAuthMiddleware,
+    logout)
 
 authRouter.get('/me',
     jwtAuthMiddleware,

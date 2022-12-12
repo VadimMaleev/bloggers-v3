@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {BlogClass, CommentClass, PostClass, UserClass} from "../types/types";
+import {BlogClass, CommentClass, PostClass, TokenType, UserClass} from "../types/types";
 import {ObjectId} from "mongodb";
 
 const blogsSchema = new mongoose.Schema<BlogClass>({
@@ -40,7 +40,13 @@ const commentsSchema = new mongoose.Schema<CommentClass>({
     postId: ObjectId
 }, {versionKey: false})
 
+const tokenSchema = new mongoose.Schema<TokenType>({
+    _id: ObjectId,
+    refreshToken: String
+})
+
 export const BlogsModel = mongoose.model('blogs', blogsSchema)
 export const PostsModel = mongoose.model('posts', postsSchema)
 export const UsersModel = mongoose.model('users', usersSchema)
 export const CommentsModel = mongoose.model('comments', commentsSchema)
+export const TokensModel = mongoose.model('tokens', tokenSchema)

@@ -3,6 +3,7 @@ import {Request, Response} from "express";
 import {AuthService} from "../../bll/auth-service";
 import {UsersQueryRepository} from "../../repositories/users-query-repository";
 import {UsersService} from "../../bll/users-service";
+import {JWTService} from "../../bll/jwt-service";
 
 @injectable()
 
@@ -10,7 +11,8 @@ export class AuthController {
     constructor(
         @inject('uqr') protected usersQueryRepository: UsersQueryRepository,
         @inject('as') protected authService: AuthService,
-        @inject('us') protected usersService: UsersService
+        @inject('us') protected usersService: UsersService,
+        @inject('js')protected jwtService: JWTService
     ) {
     }
 
@@ -26,7 +28,11 @@ export class AuthController {
         const user = await this.authService.checkCredentials(req.body.loginOrEmail, req.body.password)
         if (!user) return res.sendStatus(401)
         const accessToken = await this.authService.createToken(user)
-        return res.status(200).send({accessToken})
+        const refreshToken = await this.authService.createRefreshToken(user)
+        return res.status(200).cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true
+        }).send({accessToken})
     }
 
     async registration (req: Request, res: Response) {
@@ -69,6 +75,26 @@ export class AuthController {
             await this.usersService.createNewConfirmCode(user)
             return res.sendStatus(204)
         }
+    }
+
+    async createTokens (req: Request, res: Response) {
+        await this.jwtService.expireRefreshToken(req.cookies.refreshToken)
+        const accessToken = await this.authService.createToken(req.user!)
+        const refreshToken = await this.authService.createRefreshToken(req.user!)
+
+        if (accessToken === null || refreshToken === null) {
+            return res.sendStatus(400)
+        } else {
+            return res.status(200).cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: true
+            }).send(accessToken)
+        }
+    }
+
+    async logout(req: Request, res: Response) {
+        await this.jwtService.expireRefreshToken(req.cookies.refreshToken)
+        return res.sendStatus(204)
     }
 
     async aboutMe (req: Request, res: Response) {

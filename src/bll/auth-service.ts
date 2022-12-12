@@ -38,6 +38,10 @@ export class AuthService {
         return this.jwtService.createJWT(user!)
     }
 
+    async createRefreshToken (user: UserClass) {
+        return this.jwtService.createRefreshJWT(user!)
+    }
+
     async createUser (login: string, password: string, email: string): Promise<UserForResponse> {
         const hash = await bcrypt.hash(password, 10)
         const newUser = new UserClass(

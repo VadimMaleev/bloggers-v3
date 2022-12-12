@@ -1,20 +1,26 @@
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import jwt from 'jsonwebtoken'
-import {UserClass} from "../types/types";
+import {TokenType, UserClass} from "../types/types";
 import {settings} from "../settings/settings";
 import {ObjectId} from "mongodb";
+import {JwtRepository} from "../repositories/jwt-repository";
 
 @injectable()
 
 export class JWTService {
     constructor(
-
+        @inject('jr') protected jwtRepository: JwtRepository
     ) {
     }
 
     async createJWT(user: UserClass) {
-        return jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '10d'})
+        return jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '10s'})
     }
+
+    async createRefreshJWT(user: UserClass) {
+        return jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '20s'})
+    }
+
 
     async extractUserIdFromToken(token: string): Promise<ObjectId | null> {
         try {
@@ -23,5 +29,17 @@ export class JWTService {
         } catch (error) {
             return null
         }
+    }
+
+    async expireRefreshToken(refreshToken: string) {
+        const token = {
+            _id: new ObjectId,
+            refreshToken: refreshToken
+        }
+        await this.jwtRepository.expireRefreshToken(token)
+    }
+
+    async findExpiredToken(token: string): Promise <TokenType | null> {
+        return await this.jwtRepository.findAllExpiredTokens(token)
     }
 }

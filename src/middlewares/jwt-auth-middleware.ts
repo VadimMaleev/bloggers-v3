@@ -22,3 +22,27 @@ export const jwtAuthMiddleware = async (req: Request, res: Response, next: NextF
         return res.sendStatus(401)
     }
 }
+
+export const jwtRefreshAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const refreshTokenFromCookie = req.cookies?.refreshToken
+    if (!refreshTokenFromCookie) {
+        res.status(401).send('cookies is not exist')
+        return
+    }
+
+    const usersQueryRepository = container.resolve(UsersQueryRepository)
+    const jwtService = container.resolve(JWTService)
+    const result = await jwtService.findExpiredToken(refreshTokenFromCookie)
+    if (result?.refreshToken) {
+        return res.status(401).send("token is expired")
+    } else {
+        const _userId = await jwtService.extractUserIdFromToken(refreshTokenFromCookie)
+        if(_userId) {
+            const userId = new ObjectId(_userId)
+            req.user = await usersQueryRepository.findUserById(userId)
+            next()
+        } else {
+            return res.status(401).send("user not exist")
+        }
+    }
+}
