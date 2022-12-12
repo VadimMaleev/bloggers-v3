@@ -1,6 +1,5 @@
 import * as mongoose from "mongoose";
 
-
 const mongooseUri = process.env.mongooseUri
 
 

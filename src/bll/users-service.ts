@@ -28,10 +28,9 @@ export class UsersService {
             new Date(),
             uuidv4(),
             add(new Date(), {hours: 3}),
-            false
+            true
         )
         await this.usersRepository.createUser(newUser)
-        await this.emailAdapter.sendEmailConfirmationCode(newUser.confirmationCode, newUser.email)
 
         return {
             id: newUser.id,

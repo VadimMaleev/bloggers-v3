@@ -2,11 +2,19 @@ import {inject, injectable} from "inversify";
 import bcrypt from "bcrypt"
 import {UsersQueryRepository} from "../repositories/users-query-repository";
 import {JWTService} from "./jwt-service";
+import {UserClass, UserForResponse} from "../types/types";
+import {ObjectId} from "mongodb";
+import {v4 as uuidv4} from "uuid";
+import add from "date-fns/add";
+import {UsersRepository} from "../repositories/users-repository";
+import {EmailAdapter} from "../adapters/email-adapter";
 
 @injectable()
 export class AuthService {
     constructor(
         @inject('uqr') protected usersQueryRepository: UsersQueryRepository,
+        @inject('ur') protected usersRepository: UsersRepository,
+        @inject('ea') protected emailAdapter: EmailAdapter,
         @inject('js') protected jwtService: JWTService
     ) {
     }
@@ -19,16 +27,37 @@ export class AuthService {
     //     return await bcrypt.compare(password, passwordHash)
     // }
 
-    async checkCredentials (loginOrEmail: string, password: string): Promise<boolean> {
-        const user = await this.usersQueryRepository.findUserByLoginOrEmail(loginOrEmail)
-        if (!user) return false
-        return await bcrypt.compare(password, user.passwordHash);
+    async checkCredentials (loginOrEmail: string, password: string): Promise<UserClass | null> {
+        const user: UserClass | null = await this.usersQueryRepository.findUserByLoginOrEmail(loginOrEmail)
+        if (!user || !user.isConfirmed) return null
+        const isCompare = await bcrypt.compare(password, user.passwordHash);
+        return isCompare ? user : null
     }
 
-    async createToken(login: string) {
-        const user = await this.usersQueryRepository.findUserByLoginOrEmail(login)
-        if (user === null) return null
-        const token = await this.jwtService.createJWT(user!)
-        return {"accessToken": token}
+    async createToken(user: UserClass) {
+        return this.jwtService.createJWT(user!)
+    }
+
+    async createUser (login: string, password: string, email: string): Promise<UserForResponse> {
+        const hash = await bcrypt.hash(password, 10)
+        const newUser = new UserClass(
+            new ObjectId(),
+            login,
+            email,
+            hash,
+            new Date(),
+            uuidv4(),
+            add(new Date(), {hours: 3}),
+            false
+        )
+        await this.usersRepository.createUser(newUser)
+        await this.emailAdapter.sendEmailConfirmationCode(newUser.confirmationCode, newUser.email)
+
+        return {
+            id: newUser.id,
+            login: newUser.login,
+            email: newUser.email,
+            createdAt: newUser.createdAt
+        }
     }
 }
