@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import {Router} from "express";
 import {container} from "../composition-root";
 import {AuthController} from "./controllers/auth-controller";

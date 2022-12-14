@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import {inject, injectable} from "inversify";
 import {Request, Response} from "express";
 import {AuthService} from "../../bll/auth-service";
@@ -29,10 +30,11 @@ export class AuthController {
         if (!user) return res.sendStatus(401)
         const accessToken = await this.authService.createToken(user)
         const refreshToken = await this.authService.createRefreshToken(user)
-        return res.status(200).cookie('refreshToken', refreshToken, {
+        res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true
-        }).send({accessToken})
+        })
+        res.status(200).send({accessToken})
     }
 
     async registration (req: Request, res: Response) {
@@ -85,10 +87,11 @@ export class AuthController {
         if (accessToken === null || refreshToken === null) {
             return res.sendStatus(400)
         } else {
-            return res.status(200).cookie('refreshToken', refreshToken, {
+             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true
-            }).send(accessToken)
+            })
+            res.status(200).send({accessToken})
         }
     }
 
