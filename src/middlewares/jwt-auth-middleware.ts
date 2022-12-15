@@ -41,8 +41,8 @@ export const jwtRefreshAuthMiddleware = async (req: Request, res: Response, next
 
     const user = await usersQueryRepository.findUserById(payload.userId)
     if (!user) return res.sendStatus(401)
-
-    const device = await devicesQueryRepository.findDeviceByDeviceAndUserId(payload.deviceId, user.id)
+    const device = await devicesQueryRepository
+        .findDeviceByDeviceAndUserId(payload.deviceId, user.id)
     if (!device) return res.sendStatus(401)
 
     req.user = user
