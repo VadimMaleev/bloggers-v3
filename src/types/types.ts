@@ -101,3 +101,14 @@ export type TokenType= {
     refreshToken: string
 }
 
+export class DeviceClass {
+    constructor(
+        public ip: string,
+        public title: string,
+        public lastActiveDate: Date,
+        public deviceId: string,
+        public userId: ObjectId
+    ) {
+    }
+}
+

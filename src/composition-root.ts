@@ -21,6 +21,8 @@ import {CommentsQueryRepository} from "./repositories/comments-query-repository"
 import {CommentsRepository} from "./repositories/comments-repository";
 import {CommentsController} from "./routers/controllers/comments-controller";
 import {EmailAdapter} from "./adapters/email-adapter";
+import {DevicesRepository} from "./repositories/devices-repository";
+import {DevicesService} from "./bll/devices-service";
 
 export const container = new Container()
 
@@ -53,3 +55,7 @@ container.bind<CommentsController>(CommentsController).to(CommentsController)
 container.bind<CommentsService>('cs').to(CommentsService)
 container.bind<CommentsRepository>('cr').to(CommentsRepository);
 container.bind<CommentsQueryRepository>('cqr').to(CommentsQueryRepository);
+
+
+container.bind<DevicesService>('ds').to(DevicesService)
+container.bind<DevicesRepository>('dr').to(DevicesRepository)

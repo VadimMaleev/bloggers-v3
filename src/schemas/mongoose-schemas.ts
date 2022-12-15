@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {BlogClass, CommentClass, PostClass, TokenType, UserClass} from "../types/types";
+import {BlogClass, CommentClass, DeviceClass, PostClass, TokenType, UserClass} from "../types/types";
 import {ObjectId} from "mongodb";
 
 const blogsSchema = new mongoose.Schema<BlogClass>({
@@ -43,10 +43,19 @@ const commentsSchema = new mongoose.Schema<CommentClass>({
 const tokenSchema = new mongoose.Schema<TokenType>({
     _id: ObjectId,
     refreshToken: String
-})
+}, {versionKey: false})
+
+const deviceSchema = new mongoose.Schema<DeviceClass>({
+    ip: String,
+    title: String,
+    lastActiveDate: Date,
+    deviceId: String,
+    userId: ObjectId
+}, {versionKey: false})
 
 export const BlogsModel = mongoose.model('blogs', blogsSchema)
 export const PostsModel = mongoose.model('posts', postsSchema)
 export const UsersModel = mongoose.model('users', usersSchema)
 export const CommentsModel = mongoose.model('comments', commentsSchema)
 export const TokensModel = mongoose.model('tokens', tokenSchema)
+export const DevicesModel = mongoose.model('devices', deviceSchema)

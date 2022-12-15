@@ -2,12 +2,13 @@ import {inject, injectable} from "inversify";
 import bcrypt from "bcrypt"
 import {UsersQueryRepository} from "../repositories/users-query-repository";
 import {JWTService} from "./jwt-service";
-import {UserClass, UserForResponse} from "../types/types";
+import {DeviceClass, UserClass, UserForResponse} from "../types/types";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {UsersRepository} from "../repositories/users-repository";
 import {EmailAdapter} from "../adapters/email-adapter";
+import {DevicesRepository} from "../repositories/devices-repository";
 
 @injectable()
 export class AuthService {
@@ -15,7 +16,8 @@ export class AuthService {
         @inject('uqr') protected usersQueryRepository: UsersQueryRepository,
         @inject('ur') protected usersRepository: UsersRepository,
         @inject('ea') protected emailAdapter: EmailAdapter,
-        @inject('js') protected jwtService: JWTService
+        @inject('js') protected jwtService: JWTService,
+        @inject('dr') protected devicesRepository: DevicesRepository
     ) {
     }
 
@@ -38,8 +40,17 @@ export class AuthService {
         return this.jwtService.createJWT(user!)
     }
 
-    async createRefreshToken (user: UserClass) {
-        return this.jwtService.createRefreshJWT(user!)
+    async createRefreshToken (user: UserClass, ip:string, deviceName: string) {
+        const deviceId = uuidv4().toString()
+        const device = new DeviceClass(
+            ip,
+            deviceName,
+            new Date(),
+            deviceId,
+            user.id
+        )
+        await this.devicesRepository.createDevice(device)
+        return this.jwtService.createRefreshJWT(user!,deviceId)
     }
 
     async createUser (login: string, password: string, email: string): Promise<UserForResponse> {

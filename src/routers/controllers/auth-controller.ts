@@ -5,6 +5,7 @@ import {AuthService} from "../../bll/auth-service";
 import {UsersQueryRepository} from "../../repositories/users-query-repository";
 import {UsersService} from "../../bll/users-service";
 import {JWTService} from "../../bll/jwt-service";
+import {DevicesService} from "../../bll/devices-service";
 
 @injectable()
 
@@ -13,23 +14,17 @@ export class AuthController {
         @inject('uqr') protected usersQueryRepository: UsersQueryRepository,
         @inject('as') protected authService: AuthService,
         @inject('us') protected usersService: UsersService,
-        @inject('js')protected jwtService: JWTService
+        @inject('js')protected jwtService: JWTService,
+        @inject('ds') protected devicesService: DevicesService
     ) {
     }
 
-    // async login (req: Request, res: Response) {
-    //     const user = await this.usersQueryRepository.findUserByLoginOrEmail(req.body.loginOrEmail)
-    //     if (!user) return res.status(401).send('auth required')
-    //     const checkPassword = await this.authService.checkPassword(req.body.password, user.passwordHash)
-    //     if (!checkPassword) return res.status(401).send('auth required')
-    //     return res.sendStatus(204)
-    // }
 
     async login (req: Request, res: Response) {
         const user = await this.authService.checkCredentials(req.body.loginOrEmail, req.body.password)
         if (!user) return res.sendStatus(401)
         const accessToken = await this.authService.createToken(user)
-        const refreshToken = await this.authService.createRefreshToken(user)
+        const refreshToken = await this.authService.createRefreshToken(user, req.ip, req.headers["user-agent"])
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true
@@ -80,10 +75,9 @@ export class AuthController {
     }
 
     async createTokens (req: Request, res: Response) {
-        await this.jwtService.expireRefreshToken(req.cookies.refreshToken)
         const accessToken = await this.authService.createToken(req.user!)
-        const refreshToken = await this.authService.createRefreshToken(req.user!)
-
+        const refreshToken = await this.authService.createRefreshToken(req.user!,req.ip, req.headers["user-agent"])
+        await this.devicesService.updateLastActiveDateByDeviceIdAndUserId(req.deviceId)
         if (accessToken === null || refreshToken === null) {
             return res.sendStatus(400)
         } else {
@@ -96,7 +90,7 @@ export class AuthController {
     }
 
     async logout(req: Request, res: Response) {
-        await this.jwtService.expireRefreshToken(req.cookies.refreshToken)
+        await this.devicesService.deleteDevice(req.user.id, req.deviceId)
         return res.sendStatus(204)
     }
 

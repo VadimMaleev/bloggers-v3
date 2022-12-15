@@ -3,6 +3,7 @@ import {NextFunction, Request, Response} from "express";
 import {UsersQueryRepository} from "../repositories/users-query-repository";
 import {JWTService} from "../bll/jwt-service";
 import {ObjectId} from "mongodb";
+import {DevicesRepository} from "../repositories/devices-repository";
 
 export const jwtAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
@@ -24,25 +25,28 @@ export const jwtAuthMiddleware = async (req: Request, res: Response, next: NextF
 }
 
 export const jwtRefreshAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const refreshTokenFromCookie = req.cookies?.refreshToken
+    const usersQueryRepository = container.resolve(UsersQueryRepository)
+    const jwtService = container.resolve(JWTService)
+    const devicesRepository = container.resolve(DevicesRepository)
+
+    const refreshTokenFromCookie = req.cookies.refreshToken
+
     if (!refreshTokenFromCookie) {
-        res.status(401).send('cookies is not exist')
+        res.sendStatus(401)
         return
     }
 
-    const usersQueryRepository = container.resolve(UsersQueryRepository)
-    const jwtService = container.resolve(JWTService)
-    const result = await jwtService.findExpiredToken(refreshTokenFromCookie)
-    if (result?.refreshToken) {
-        return res.status(401).send("token is expired")
-    } else {
-        const _userId = await jwtService.extractUserIdFromToken(refreshTokenFromCookie)
-        if(_userId) {
-            const userId = new ObjectId(_userId)
-            req.user = await usersQueryRepository.findUserById(userId)
-            next()
-        } else {
-            return res.status(401).send("user not exist")
-        }
-    }
+    const payload = await jwtService.extractPayloadFromToken(refreshTokenFromCookie)
+    if (!payload) return res.sendStatus(401)
+
+    const user = await usersQueryRepository.findUserById(payload.userId)
+    if (!user) return res.sendStatus(401)
+
+    const device = await devicesRepository.findDeviceByDeviceAndUserId(payload.deviceId, user.id)
+    if (!device) return res.sendStatus(401)
+
+    req.user = user
+    req.deviceId = device.deviceId
+    return next()
+
 }

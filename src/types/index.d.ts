@@ -4,6 +4,7 @@ declare global {
     declare namespace Express {
         export interface Request {
             user: UserClass | null
+            deviceId: string | null,
         }
     }
 }
