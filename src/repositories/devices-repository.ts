@@ -16,8 +16,11 @@ export class DevicesRepository {
         await deviceInstance.save()
     }
 
-    async deleteDevice(userId: ObjectId, deviceId: string) {
-        await DevicesModel.deleteOne({userId: userId, deviceId: deviceId})
+    async deleteDevice(userId: ObjectId, deviceId: string): Promise<boolean> {
+        const deviceInstance = DevicesModel.findOne({userId: userId, deviceId: deviceId})
+        if (!deviceInstance) return false
+        deviceInstance.deleteOne()
+        return true
     }
 
     async findDeviceByDeviceAndUserId(deviceId:string, userId: ObjectId) {
@@ -29,5 +32,10 @@ export class DevicesRepository {
         if(!deviceInstance) return false
         deviceInstance.lastActiveDate = new Date()
         deviceInstance.save()
+    }
+
+    //TODO не нашел информацию про удаление всех кроме одного
+    async deleteAllDevices(userId: ObjectId, deviceId: string) {
+       await DevicesModel.deleteMany({userId: userId, deviceId: !deviceId})
     }
 }

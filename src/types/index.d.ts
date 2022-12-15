@@ -1,10 +1,10 @@
-import {UserClass} from "./types";
+import {DeviceClass, UserClass} from "./types";
 
 declare global {
     declare namespace Express {
         export interface Request {
             user: UserClass | null
-            deviceId: string | null,
+            device: DeviceClass | null
         }
     }
 }

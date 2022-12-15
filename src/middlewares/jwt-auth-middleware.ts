@@ -46,7 +46,7 @@ export const jwtRefreshAuthMiddleware = async (req: Request, res: Response, next
     if (!device) return res.sendStatus(401)
 
     req.user = user
-    req.deviceId = device.deviceId
+    req.device = device
     return next()
 
 }

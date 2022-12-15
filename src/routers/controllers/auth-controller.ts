@@ -76,8 +76,8 @@ export class AuthController {
 
     async createTokens (req: Request, res: Response) {
         const accessToken = await this.authService.createToken(req.user!)
-        const refreshToken = await this.authService.createRefreshToken(req.user!,req.ip, req.headers["user-agent"])
-        await this.devicesService.updateLastActiveDateByDeviceIdAndUserId(req.deviceId)
+        const refreshToken = await this.authService.createRefreshToken(req.user,req.ip, req.headers["user-agent"])
+        await this.devicesService.updateLastActiveDateByDeviceIdAndUserId(req.device.deviceId)
         if (accessToken === null || refreshToken === null) {
             return res.sendStatus(400)
         } else {
@@ -90,7 +90,7 @@ export class AuthController {
     }
 
     async logout(req: Request, res: Response) {
-        await this.devicesService.deleteDevice(req.user.id, req.deviceId)
+        await this.devicesService.deleteDevice(req.user.id, req.device.deviceId)
         return res.sendStatus(204)
     }
 

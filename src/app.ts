@@ -9,6 +9,7 @@ import {testingRouter} from "./routers/testing-route";
 import {usersRouter} from "./routers/users-route";
 import {authRouter} from "./routers/auth-route";
 import {commentsRouter} from "./routers/comments-route";
+import {devicesRouter} from "./routers/devices-route";
 
 export const app = express()
 
@@ -27,3 +28,4 @@ app.use('/testing', testingRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authRouter)
 app.use('/comments', commentsRouter)
+app.use('/security', devicesRouter)

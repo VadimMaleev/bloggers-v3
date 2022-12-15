@@ -23,6 +23,8 @@ import {CommentsController} from "./routers/controllers/comments-controller";
 import {EmailAdapter} from "./adapters/email-adapter";
 import {DevicesRepository} from "./repositories/devices-repository";
 import {DevicesService} from "./bll/devices-service";
+import {DevicesController} from "./routers/controllers/devices-controller";
+import {DevicesQueryRepository} from "./repositories/devices-query-repository";
 
 export const container = new Container()
 
@@ -56,6 +58,7 @@ container.bind<CommentsService>('cs').to(CommentsService)
 container.bind<CommentsRepository>('cr').to(CommentsRepository);
 container.bind<CommentsQueryRepository>('cqr').to(CommentsQueryRepository);
 
-
+container.bind<DevicesController>(DevicesController).to(DevicesController)
 container.bind<DevicesService>('ds').to(DevicesService)
 container.bind<DevicesRepository>('dr').to(DevicesRepository)
+container.bind<DevicesQueryRepository>('dqr').to(DevicesQueryRepository)

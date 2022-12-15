@@ -12,12 +12,16 @@ export class DevicesService {
     ) {
     }
 
-   async deleteDevice (userId: ObjectId, deviceId: string) {
-       await this.devicesRepository.deleteDevice(userId, deviceId)
+   async deleteDevice (userId: ObjectId, deviceId: string): Promise<boolean> {
+       return await this.devicesRepository.deleteDevice(userId, deviceId)
    }
 
 
     async updateLastActiveDateByDeviceIdAndUserId(deviceId: string) {
         return await this.devicesRepository.updateLastActiveDateByDeviceIdAndUserId(deviceId)
+    }
+
+    async deleteAllDevices(userId: ObjectId, deviceId: string) {
+        await this.devicesRepository.deleteAllDevices(userId, deviceId)
     }
 }
