@@ -23,8 +23,9 @@ export class DevicesController {
     }
 
     async deleteDevice (req: Request, res: Response) {
-        if (req.user.id !== req.device.userId) return res.sendStatus(403)
-        const isDeleted = this.devicesService.deleteDevice(req.user.id, req.params.deviceId)
+        const device = await this.devicesQueryRepository.findDeviceByDeviceAndUserId(req.params.id, req.user.id)
+        if (req.user.id !== device.userId) return res.sendStatus(403)
+        const isDeleted = this.devicesService.deleteDevice(req.user.id, req.params.id)
         if (!isDeleted) return res.sendStatus(404)
         return res.sendStatus(204)
     }

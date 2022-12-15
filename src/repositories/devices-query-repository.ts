@@ -15,4 +15,8 @@ export class DevicesQueryRepository {
     async findDevicesForUser(userId: ObjectId): Promise<DeviceClass[]> {
         return DevicesModel.find({userId: userId}, {_id:0, userId: 0}).lean()
     }
+
+    async findDeviceByDeviceAndUserId(deviceId:string, userId: ObjectId): Promise<DeviceClass | null> {
+        return DevicesModel.findOne({userId, deviceId})
+    }
 }

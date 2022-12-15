@@ -23,10 +23,6 @@ export class DevicesRepository {
         return true
     }
 
-    async findDeviceByDeviceAndUserId(deviceId:string, userId: ObjectId) {
-        return DevicesModel.findOne({userId, deviceId})
-    }
-
     async updateLastActiveDateByDeviceIdAndUserId(deviceId: string): Promise<boolean> {
         const deviceInstance = await DevicesModel.findOne({deviceId: deviceId})
         if(!deviceInstance) return false
