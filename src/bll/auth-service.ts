@@ -9,6 +9,8 @@ import add from "date-fns/add";
 import {UsersRepository} from "../repositories/users-repository";
 import {EmailAdapter} from "../adapters/email-adapter";
 import {DevicesRepository} from "../repositories/devices-repository";
+import {randomUUID} from "crypto";
+import {DevicesQueryRepository} from "../repositories/devices-query-repository";
 
 @injectable()
 export class AuthService {
@@ -17,7 +19,8 @@ export class AuthService {
         @inject('ur') protected usersRepository: UsersRepository,
         @inject('ea') protected emailAdapter: EmailAdapter,
         @inject('js') protected jwtService: JWTService,
-        @inject('dr') protected devicesRepository: DevicesRepository
+        @inject('dr') protected devicesRepository: DevicesRepository,
+        @inject('dqr') protected devicesQueryRepository: DevicesQueryRepository
     ) {
     }
 
@@ -41,16 +44,32 @@ export class AuthService {
     }
 
     async createRefreshToken (user: UserClass, ip:string, deviceName: string) {
-        const deviceId = uuidv4().toString()
+        const deviceId = randomUUID()
+        const refreshToken = await this.jwtService.createRefreshJWT(user!,deviceId)
+        const lastActiveDate = this.jwtService.getLastActiveDateFromRefreshToken(refreshToken)
         const device = new DeviceClass(
             ip,
             deviceName,
-            new Date(),
+            lastActiveDate,
             deviceId,
             user.id
         )
         await this.devicesRepository.createDevice(device)
-        return this.jwtService.createRefreshJWT(user!,deviceId)
+        return refreshToken
+    }
+
+    async refreshToken(user: UserClass, oldRefreshToken: string) {
+        const jwtPayload = await this.jwtService.extractPayloadFromToken(oldRefreshToken)
+        const userId = user.id
+        const deviceId = jwtPayload.deviceId
+        const lastActiveDate = new Date(jwtPayload.iat * 1000).toISOString()
+        const device = await this.devicesQueryRepository.findDeviceByDeviceAndUserIdAndDate(deviceId, userId, lastActiveDate)
+        if (!device) return null
+        const refreshToken = await this.jwtService.createRefreshJWT(user, deviceId)
+        const newLastActiveDate = this.jwtService.getLastActiveDateFromRefreshToken(refreshToken)
+        const isDateUpdated = await this.devicesRepository.updateLastActiveDateByDeviceAndUserId(deviceId, userId, newLastActiveDate)
+        if (!isDateUpdated) return null
+        return refreshToken
     }
 
     async createUser (login: string, password: string, email: string): Promise<UserForResponse> {
@@ -74,5 +93,13 @@ export class AuthService {
             email: newUser.email,
             createdAt: newUser.createdAt
         }
+    }
+
+    async logout(user: UserClass, oldRefreshToken: string): Promise<boolean> {
+        const jwtPayload = await this.jwtService.extractPayloadFromToken(oldRefreshToken)
+        const userId = user.id
+        const deviceId = jwtPayload.deviceId
+        const lastActiveDate = new Date(jwtPayload.iat * 1000).toISOString()
+        return this.devicesRepository.findAndDeleteDeviceByDeviceAndUserIdAndDate(userId, deviceId, lastActiveDate)
     }
 }

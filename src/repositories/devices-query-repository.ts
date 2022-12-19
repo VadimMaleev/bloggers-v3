@@ -19,4 +19,12 @@ export class DevicesQueryRepository {
     async findDeviceByDeviceAndUserId(deviceId:string, userId: ObjectId): Promise<DeviceClass | null> {
         return DevicesModel.findOne({userId, deviceId})
     }
+
+    async findDeviceByDeviceAndUserIdAndDate(deviceId:string, userId: ObjectId, lastActiveDate: string): Promise<DeviceClass | null> {
+        return DevicesModel.findOne({userId, deviceId, lastActiveDate})
+    }
+
+    async findDeviceByDeviceIdAndDate(deviceId:string, lastActiveDate: string): Promise<DeviceClass | null> {
+        return DevicesModel.findOne({deviceId, lastActiveDate})
+    }
 }

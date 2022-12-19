@@ -5,6 +5,7 @@ import {settings} from "../settings/settings";
 import {ObjectId} from "mongodb";
 import {JwtRepository} from "../repositories/jwt-repository";
 
+
 @injectable()
 
 export class JWTService {
@@ -23,7 +24,10 @@ export class JWTService {
 
     }
 
-
+     getLastActiveDateFromRefreshToken(refreshToken: string): string {
+        const payload: any = jwt.decode(refreshToken)
+        return new Date(payload.iat * 1000).toISOString()
+    }
 
 
     async extractUserIdFromToken(token: string): Promise<ObjectId | null> {

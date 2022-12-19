@@ -105,7 +105,7 @@ export class DeviceClass {
     constructor(
         public ip: string,
         public title: string,
-        public lastActiveDate: Date,
+        public lastActiveDate: string,
         public deviceId: string,
         public userId: ObjectId
     ) {

@@ -16,22 +16,41 @@ export class DevicesRepository {
         await deviceInstance.save()
     }
 
-    async deleteDevice(userId: ObjectId, deviceId: string): Promise<boolean> {
-        const deviceInstance = DevicesModel.findOne({userId: userId, deviceId: deviceId})
+    async updateLastActiveDateByDeviceAndUserId(deviceId: string, userId: ObjectId, newLastActiveDate: string): Promise<boolean> {
+        try {
+            const deviceInstance = await DevicesModel.findOne({deviceId: deviceId, userId})
+            deviceInstance.lastActiveDate = newLastActiveDate
+            await deviceInstance.save()
+            return true
+        } catch (e) {
+            return false
+        }
+
+    }
+
+    async findAndDeleteDeviceByDeviceAndUserIdAndDate(userId: ObjectId, deviceId: string, lastActiveDate: string): Promise<boolean> {
+        const deviceInstance = DevicesModel.findOne({userId, deviceId, lastActiveDate})
         if (!deviceInstance) return false
-        deviceInstance.deleteOne()
+        await deviceInstance.deleteOne()
         return true
     }
 
-    async updateLastActiveDateByDeviceIdAndUserId(deviceId: string): Promise<boolean> {
-        const deviceInstance = await DevicesModel.findOne({deviceId: deviceId})
-        if(!deviceInstance) return false
-        deviceInstance.lastActiveDate = new Date()
-        deviceInstance.save()
+
+    async deleteAllDevicesExceptCurrent(userId: ObjectId, deviceId: string): Promise<boolean> {
+        try {
+            await DevicesModel.deleteMany({userId, deviceId: {$ne: deviceId}})
+            return true
+        } catch (e) {
+            return false
+        }
     }
 
-    //TODO не нашел информацию про удаление всех кроме одного
-    async deleteAllDevices(userId: ObjectId, deviceId: string) {
-       await DevicesModel.deleteMany({userId: userId, deviceId: !deviceId})
+    async deleteDevice(device: DeviceClass): Promise<boolean> {
+        try {
+            await DevicesModel.deleteOne(device)
+            return true
+        } catch (e) {
+            return false
+        }
     }
 }

@@ -18,19 +18,14 @@ export class DevicesController {
     }
 
     async deleteAllDevices (req: Request, res: Response) {
-        await this.devicesService.deleteAllDevices(req.user.id, req.device.deviceId)
-        return res.sendStatus(204)
+        const refreshToken = req.cookies.refreshToken
+        const isDeleted = await this.devicesService.deleteAllDevicesExceptCurrent(req.user.id, refreshToken)
+        return isDeleted ? res.sendStatus(204) : res.sendStatus(401)
     }
 
     async deleteDevice (req: Request, res: Response) {
-        const device = await this.devicesQueryRepository
-            .findDeviceByDeviceAndUserId(req.params.id, req.user.id)
-        if (!device) return res.sendStatus(404)
-
-        if (req.user.id !== device.userId) return res.sendStatus(403)
-        const isDeleted = await this.devicesService.deleteDevice(req.user.id, req.params.id)
-        if (!isDeleted) return res.sendStatus(404)
-        return res.sendStatus(204)
+        const status = await this.devicesService.deleteDeviceById(req.user.id, req.params.id, req.cookies.refreshToken)
+        return res.sendStatus(status)
     }
 
 }

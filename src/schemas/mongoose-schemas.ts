@@ -48,7 +48,7 @@ const tokenSchema = new mongoose.Schema<TokenType>({
 const deviceSchema = new mongoose.Schema<DeviceClass>({
     ip: String,
     title: String,
-    lastActiveDate: Date,
+    lastActiveDate: String,
     deviceId: String,
     userId: ObjectId
 }, {versionKey: false})

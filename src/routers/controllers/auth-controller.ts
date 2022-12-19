@@ -74,24 +74,25 @@ export class AuthController {
         }
     }
 
-    async createTokens (req: Request, res: Response) {
-        const accessToken = await this.authService.createToken(req.user!)
-        const refreshToken = await this.authService.createRefreshToken(req.user,req.ip, req.headers["user-agent"])
-        await this.devicesService.updateLastActiveDateByDeviceIdAndUserId(req.device.deviceId)
-        if (accessToken === null || refreshToken === null) {
-            return res.sendStatus(400)
-        } else {
-             res.cookie('refreshToken', refreshToken, {
+    async refreshToken (req: Request, res: Response) {
+        const user = req.user!
+        const oldRefreshToken = req.cookies.refreshToken!
+        const accessToken = await this.authService.createToken(user)
+        const refreshToken = await this.authService.refreshToken(user, oldRefreshToken)
+        if (!refreshToken) return res.sendStatus(401)
+        res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true
-            })
-            res.status(200).send({accessToken})
-        }
+        })
+        res.status(200).send({accessToken})
+
     }
 
     async logout(req: Request, res: Response) {
-        await this.devicesService.deleteDevice(req.user.id, req.device.deviceId)
-        return res.sendStatus(204)
+        const user = req.user!
+        const oldRefreshToken = req.cookies.refreshToken!
+        const isLogout = await this.authService.logout(user, oldRefreshToken)
+        return isLogout ? res.sendStatus(204) : res.sendStatus(401)
     }
 
     async aboutMe (req: Request, res: Response) {

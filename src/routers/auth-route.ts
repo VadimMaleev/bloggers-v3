@@ -21,7 +21,7 @@ const aboutMe = authController.aboutMe.bind(authController)
 const registration = authController.registration.bind(authController)
 const confirmation = authController.confirmation.bind(authController)
 const emailResending = authController.emailResending.bind(authController)
-const createTokens = authController.createTokens.bind(authController)
+const createTokens = authController.refreshToken.bind(authController)
 const logout = authController.logout.bind(authController)
 
 authRouter.post('/login',
