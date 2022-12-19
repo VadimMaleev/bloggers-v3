@@ -10,6 +10,7 @@ import {
     loginUsersValidation,
     passwordUsersValidation
 } from "../middlewares/users-validation-middleware";
+import {ipBlockMiddleware} from "../middlewares/ip-block-middleware";
 
 export const authRouter = Router({})
 
@@ -24,12 +25,14 @@ const createTokens = authController.createTokens.bind(authController)
 const logout = authController.logout.bind(authController)
 
 authRouter.post('/login',
+    ipBlockMiddleware('login'),
     loginOrEmailAuthValidation,
     passwordAuthValidation,
     errorsMiddleware,
     login)
 
 authRouter.post('/registration',
+    ipBlockMiddleware('registration'),
     loginUsersValidation,
     emailUsersValidation,
     passwordUsersValidation,
@@ -37,9 +40,11 @@ authRouter.post('/registration',
     registration)
 
 authRouter.post('/registration-confirmation',
+    ipBlockMiddleware('registration-confirmation'),
     confirmation)
 
 authRouter.post('/registration-email-resending',
+    ipBlockMiddleware('registration-email-resending'),
     emailUsersValidation,
     errorsMiddleware,
     emailResending
