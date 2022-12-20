@@ -30,7 +30,7 @@ export class DevicesService {
         // const lastActiveDate = new Date(jwtPayload.iat * 1000).toISOString()
         const device = await this.devicesQueryRepository.findDeviceByDeviceIdAndDate(deviceId, lastActiveDate)
         if (!device) return 404
-        if (device.userId !== userId) return 403
+        if (device.userId.toHexString() !== userId.toHexString()) return 403
         const isDeleted = await this.devicesRepository.deleteDevice(device)
         console.log('deleteDeviceById => isDeleted', isDeleted)
         if (!isDeleted) return 404
