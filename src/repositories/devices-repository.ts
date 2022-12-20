@@ -18,9 +18,7 @@ export class DevicesRepository {
 
     async updateLastActiveDateByDeviceAndUserId(deviceId: string, userId: ObjectId, newLastActiveDate: string): Promise<boolean> {
         try {
-            const deviceInstance = await DevicesModel.findOne({deviceId: deviceId, userId})
-            deviceInstance.lastActiveDate = newLastActiveDate
-            await deviceInstance.save()
+            await DevicesModel.findOneAndUpdate({deviceId: deviceId, userId}, {$set: {lastActiveDate: newLastActiveDate}})
             return true
         } catch (e) {
             return false
