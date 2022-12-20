@@ -24,11 +24,8 @@ export class DevicesService {
         return this.devicesRepository.deleteAllDevicesExceptCurrent(userId, deviceId)
     }
 
-    async deleteDeviceById(userId: ObjectId, deviceId: string, refreshToken: string): Promise<number> {
-        const lastActiveDate = this.jwtService.getLastActiveDateFromRefreshToken(refreshToken)
-        console.log('deviceService=> lastActDate => ', lastActiveDate)
-        // const lastActiveDate = new Date(jwtPayload.iat * 1000).toISOString()
-        const device = await this.devicesQueryRepository.findDeviceByDeviceIdAndDate(deviceId, lastActiveDate)
+    async deleteDeviceById(userId: ObjectId, deviceId: string): Promise<number> {
+        const device = await this.devicesQueryRepository.findDeviceByDeviceId(deviceId)
         if (!device) return 404
         if (device.userId.toHexString() !== userId.toHexString()) return 403
         const isDeleted = await this.devicesRepository.deleteDevice(device)

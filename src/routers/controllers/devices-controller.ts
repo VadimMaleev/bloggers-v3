@@ -24,7 +24,7 @@ export class DevicesController {
     }
 
     async deleteDevice (req: Request, res: Response) {
-        const status = await this.devicesService.deleteDeviceById(req.user.id, req.params.id, req.cookies.refreshToken)
+        const status = await this.devicesService.deleteDeviceById(req.user.id, req.params.id)
         return res.sendStatus(status)
     }
 

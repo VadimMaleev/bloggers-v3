@@ -24,15 +24,7 @@ export class DevicesQueryRepository {
         return DevicesModel.findOne({userId, deviceId, lastActiveDate})
     }
 
-    async findDeviceByDeviceIdAndDate(deviceId:string, lastActiveDate: string): Promise<DeviceClass | null> {
-        const devices = await DevicesModel.find({})
-        const deviceById = await DevicesModel.findOne({deviceId})
-        const deviceByDate = await DevicesModel.findOne({lastActiveDate})
-        const deviceByIdAndDate = await DevicesModel.findOne({deviceId, lastActiveDate})
-        console.log('DeviceQueryRepo => findDeviceByDeviceIdAndDate => devices', devices)
-        console.log('DeviceQueryRepo => findDeviceByDeviceIdAndDate => deviceById', deviceById)
-        console.log('DeviceQueryRepo => findDeviceByDeviceIdAndDate => deviceByDate', deviceByDate)
-        console.log('DeviceQueryRepo => findDeviceByDeviceIdAndDate => deviceByIdAndDate', deviceByIdAndDate)
-        return deviceById
+    async findDeviceByDeviceId(deviceId:string): Promise<DeviceClass | null> {
+        return DevicesModel.findOne({deviceId})
     }
 }
