@@ -33,6 +33,6 @@ export class DevicesQueryRepository {
         console.log('DeviceQueryRepo => findDeviceByDeviceIdAndDate => deviceById', deviceById)
         console.log('DeviceQueryRepo => findDeviceByDeviceIdAndDate => deviceByDate', deviceByDate)
         console.log('DeviceQueryRepo => findDeviceByDeviceIdAndDate => deviceByIdAndDate', deviceByIdAndDate)
-        return deviceByIdAndDate
+        return deviceById
     }
 }
