@@ -11,6 +11,7 @@ import {
     passwordUsersValidation
 } from "../middlewares/users-validation-middleware";
 import {ipBlockMiddleware} from "../middlewares/ip-block-middleware";
+import {passwordRecoveryValidation} from "../middlewares/password-recovery-validation";
 
 export const authRouter = Router({})
 
@@ -23,6 +24,8 @@ const confirmation = authController.confirmation.bind(authController)
 const emailResending = authController.emailResending.bind(authController)
 const createTokens = authController.refreshToken.bind(authController)
 const logout = authController.logout.bind(authController)
+const passwordRecovery = authController.passwordRecovery.bind(authController)
+const newPassword = authController.newPassword.bind(authController)
 
 authRouter.post('/login',
     ipBlockMiddleware('login'),
@@ -38,6 +41,16 @@ authRouter.post('/registration',
     passwordUsersValidation,
     errorsMiddleware,
     registration)
+
+authRouter.post('/password-recovery',
+    ipBlockMiddleware('password-recovery'),
+    emailUsersValidation,
+    passwordRecovery)
+
+authRouter.post('/new-password',
+    ipBlockMiddleware('new-password'),
+    passwordRecoveryValidation,
+    newPassword)
 
 authRouter.post('/registration-confirmation',
     ipBlockMiddleware('registration-confirmation'),

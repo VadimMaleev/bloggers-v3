@@ -45,6 +45,26 @@ export class AuthController {
         res.status(204).send(user)
     }
 
+    async passwordRecovery (req: Request, res: Response) {
+        const user = await this.usersQueryRepository.findUserByEmail(req.body.email)
+        if (!user) return res.sendStatus(204)
+        await this.authService.passwordRecovery(user)
+        return res.sendStatus(204)
+    }
+
+    async newPassword (req: Request, res: Response) {
+        const result = await this.authService.newPassword(req.body.newPassword, req.body.recoveryCode)
+        if (!result) return res.status(400).send({
+            errorsMessages: [
+                {
+                    message: "confirm code error",
+                    field: "code"
+                }
+            ]
+        })
+        return res.sendStatus(204)
+    }
+
     async confirmation (req: Request, res: Response) {
         const result = await this.usersService.confirmUser(req.body.code)
         if (result) {

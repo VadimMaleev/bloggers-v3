@@ -19,12 +19,6 @@ export class PostsRepository {
     }
 
     async updatePost (postId: ObjectId, title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<boolean> {
-        // try {
-        //     const result = await PostsModel.findOneAndUpdate({id:postId}, {set: {title, shortDescription, content, blogId}})
-        //     return !!result
-        // } catch (e) {
-        //     return false
-        // }
         const postInstance =  await PostsModel.findOne({id: postId})
         if (!postInstance) return false
         postInstance.title = title

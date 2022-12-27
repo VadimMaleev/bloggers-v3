@@ -25,6 +25,7 @@ import {DevicesRepository} from "./repositories/devices-repository";
 import {DevicesService} from "./bll/devices-service";
 import {DevicesController} from "./routers/controllers/devices-controller";
 import {DevicesQueryRepository} from "./repositories/devices-query-repository";
+import {RecoveryCodesRepository} from "./repositories/recovery-codes-repository";
 
 export const container = new Container()
 
@@ -62,3 +63,6 @@ container.bind<DevicesController>(DevicesController).to(DevicesController)
 container.bind<DevicesService>('ds').to(DevicesService)
 container.bind<DevicesRepository>('dr').to(DevicesRepository)
 container.bind<DevicesQueryRepository>('dqr').to(DevicesQueryRepository)
+
+container.bind<RecoveryCodesRepository>('rcr').to(RecoveryCodesRepository)
+

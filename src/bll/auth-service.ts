@@ -2,7 +2,7 @@ import {inject, injectable} from "inversify";
 import bcrypt from "bcrypt"
 import {UsersQueryRepository} from "../repositories/users-query-repository";
 import {JWTService} from "./jwt-service";
-import {DeviceClass, UserClass, UserForResponse} from "../types/types";
+import {DeviceClass, RecoveryCodeClass, UserClass, UserForResponse} from "../types/types";
 import {ObjectId} from "mongodb";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
@@ -11,6 +11,7 @@ import {EmailAdapter} from "../adapters/email-adapter";
 import {DevicesRepository} from "../repositories/devices-repository";
 import {randomUUID} from "crypto";
 import {DevicesQueryRepository} from "../repositories/devices-query-repository";
+import {RecoveryCodesRepository} from "../repositories/recovery-codes-repository";
 
 @injectable()
 export class AuthService {
@@ -20,7 +21,8 @@ export class AuthService {
         @inject('ea') protected emailAdapter: EmailAdapter,
         @inject('js') protected jwtService: JWTService,
         @inject('dr') protected devicesRepository: DevicesRepository,
-        @inject('dqr') protected devicesQueryRepository: DevicesQueryRepository
+        @inject('dqr') protected devicesQueryRepository: DevicesQueryRepository,
+        @inject('rcr') protected recoveryCodesRepository: RecoveryCodesRepository
     ) {
     }
 
@@ -101,5 +103,26 @@ export class AuthService {
         const deviceId = jwtPayload.deviceId
         const lastActiveDate = new Date(jwtPayload.iat * 1000).toISOString()
         return this.devicesRepository.findAndDeleteDeviceByDeviceAndUserIdAndDate(userId, deviceId, lastActiveDate)
+    }
+
+    async passwordRecovery(user: UserClass) {
+        const code = uuidv4()
+        const recoveryCode = new RecoveryCodeClass(
+            code,
+            add(new Date(), {hours: 3}),
+            user.id
+        )
+
+        await this.recoveryCodesRepository.createRecoveryCode(recoveryCode)
+        await this.emailAdapter.passwordRecovery(code, user.email)
+    }
+
+    async newPassword(newPassword: string, recoveryCode: string): Promise<boolean> {
+        const newPasswordHash = await bcrypt.hash(newPassword, 10)
+        const code = await this.recoveryCodesRepository.findCode(recoveryCode)
+        if (!code) return false
+        if (code.codeExpirationDate < new Date()) return false
+
+        return await this.usersRepository.updatePassword(newPasswordHash, code.userId)
     }
 }

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {BlogClass, CommentClass, DeviceClass, PostClass, TokenType, UserClass} from "../types/types";
+import {BlogClass, CommentClass, DeviceClass, PostClass, RecoveryCodeClass, TokenType, UserClass} from "../types/types";
 import {ObjectId} from "mongodb";
 
 const blogsSchema = new mongoose.Schema<BlogClass>({
@@ -53,9 +53,16 @@ const deviceSchema = new mongoose.Schema<DeviceClass>({
     userId: ObjectId
 }, {versionKey: false})
 
+const recoveryCodeSchema = new mongoose.Schema<RecoveryCodeClass>({
+    code: String,
+    codeExpirationDate: Date,
+    userId: ObjectId
+}, {versionKey: false})
+
 export const BlogsModel = mongoose.model('blogs', blogsSchema)
 export const PostsModel = mongoose.model('posts', postsSchema)
 export const UsersModel = mongoose.model('users', usersSchema)
 export const CommentsModel = mongoose.model('comments', commentsSchema)
 export const TokensModel = mongoose.model('tokens', tokenSchema)
 export const DevicesModel = mongoose.model('devices', deviceSchema)
+export const RecoveryCodesModel = mongoose.model('recoveryCodes', recoveryCodeSchema)

@@ -112,3 +112,12 @@ export class DeviceClass {
     }
 }
 
+export class RecoveryCodeClass {
+    constructor(
+        public code: string,
+        public codeExpirationDate: Date,
+        public userId: ObjectId
+    ) {
+    }
+}
+

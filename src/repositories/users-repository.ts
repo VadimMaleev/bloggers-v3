@@ -43,5 +43,11 @@ export class UsersRepository {
         return true
     }
 
+    async updatePassword(newPasswordHash: string, userId: ObjectId): Promise<boolean> {
+        const userInstance: UserClass = await UsersModel.findOne({id: userId})
+        if(!userInstance) return false
 
+        userInstance.passwordHash = newPasswordHash
+        return true
+    }
 }
