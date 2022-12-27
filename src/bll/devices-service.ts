@@ -29,7 +29,6 @@ export class DevicesService {
         if (!device) return 404
         if (device.userId.toHexString() !== userId.toHexString()) return 403
         const isDeleted = await this.devicesRepository.deleteDevice(device)
-        console.log('deleteDeviceById => isDeleted', isDeleted)
         if (!isDeleted) return 404
         return 204
     }
