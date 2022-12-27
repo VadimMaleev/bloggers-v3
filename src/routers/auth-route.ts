@@ -45,6 +45,7 @@ authRouter.post('/registration',
 authRouter.post('/password-recovery',
     ipBlockMiddleware('password-recovery'),
     emailUsersValidation,
+    errorsMiddleware,
     passwordRecovery)
 
 authRouter.post('/new-password',

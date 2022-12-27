@@ -58,7 +58,7 @@ export class AuthController {
             errorsMessages: [
                 {
                     message: "confirm code error",
-                    field: "code"
+                    field: "recoveryCode"
                 }
             ]
         })
