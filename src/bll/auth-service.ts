@@ -123,6 +123,8 @@ export class AuthService {
         if (!code) return false
         if (code.codeExpirationDate < new Date()) return false
 
+
+        await this.recoveryCodesRepository.deleteCode(recoveryCode)
         return await this.usersRepository.updatePassword(newPasswordHash, code.userId)
     }
 }
