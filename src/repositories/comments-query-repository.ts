@@ -15,6 +15,8 @@ export class CommentsQueryRepository {
         const items = await CommentsModel.find({postId: postId}, {_id: 0, postId: 0})
             .sort({[sortBy]: sortDirection}).select({})
             .skip((page - 1) * pageSize).limit(pageSize).lean()
+        //найти лайки
+        //фильтр для
 
         return {
             pagesCount: Math.ceil(await CommentsModel.count({'postId': postId}) / pageSize),

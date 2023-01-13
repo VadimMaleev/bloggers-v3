@@ -1,5 +1,5 @@
 import {inject, injectable} from "inversify";
-import {CommentClass, CommentForResponse} from "../types/types";
+import {CommentClass, CommentForResponse, LikesInfoClass} from "../types/types";
 import {ObjectId} from "mongodb";
 import {CommentsRepository} from "../repositories/comments-repository";
 
@@ -18,7 +18,12 @@ export class CommentsService {
             userId,
             login,
             new Date(),
-            postId
+            postId,
+            new LikesInfoClass(
+                0,
+                0,
+                'None'
+            )
         )
         await this.commentsRepository.createComment(newComment)
 
@@ -27,7 +32,12 @@ export class CommentsService {
             content: newComment.content,
             userId: newComment.userId,
             userLogin: newComment.userLogin,
-            createdAt: newComment.createdAt
+            createdAt: newComment.createdAt,
+            likesInfo: {
+                likesCount: newComment.likesInfo.likesCount,
+                dislikesCount: newComment.likesInfo.dislikesCount,
+                myStatus: newComment.likesInfo.myStatus
+            }
         }
     }
 

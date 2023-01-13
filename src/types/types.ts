@@ -69,6 +69,15 @@ export type UsersPagType = {
     items: UserForResponse[]
 }
 
+export class LikesInfoClass {
+    constructor(
+       public  likesCount: number,
+       public  dislikesCount: number,
+       public  myStatus: string
+    ) {
+    }
+}
+
 export class CommentClass {
     constructor(
         public id: ObjectId,
@@ -76,7 +85,8 @@ export class CommentClass {
         public userId: ObjectId,
         public userLogin: string,
         public createdAt: Date,
-        public postId: ObjectId
+        public postId: ObjectId,
+        public likesInfo: LikesInfoClass
     ) {     }
 }
 
@@ -85,7 +95,8 @@ export type CommentForResponse = {
     content: string,
     userId: ObjectId,
     userLogin: string,
-    createdAt: Date
+    createdAt: Date,
+    likesInfo: LikesInfoClass
 }
 
 export type CommentsPagType = {
@@ -120,4 +131,18 @@ export class RecoveryCodeClass {
     ) {
     }
 }
+
+export class LikeForRepoClass {
+    constructor(
+        public id: ObjectId,
+        public entity: string,
+        public idOfEntity: ObjectId,
+        public userId: ObjectId,
+        public login: string,
+        public addedAt: Date,
+        public status: "Like" | "Dislike" | "None"
+    ) {
+    }
+}
+
 
