@@ -43,21 +43,21 @@ export class CommentsQueryRepository {
     }
 
     async getCommentById (id: ObjectId, userId?: ObjectId | null): Promise<CommentForResponse | null> {
-        const comment = await CommentsModel.findOne({id: id})
+        const comment = await CommentsModel.findOne({id: id}).lean()
         if (!comment) return null
         const result: CommentForResponse = await mapComment(comment)
         let myLikeForComment: LikeForRepoClass | null = null
         if (!userId) {
             return result
         }
-        myLikeForComment = await LikesModel.findOne({
-            userId: userId,
-            idOfEntity: comment.id
-        }).lean()
-
-        if (myLikeForComment) {
-            result.likesInfo.myStatus = myLikeForComment.status
-        }
+        // myLikeForComment = await LikesModel.findOne({
+        //     userId: userId,
+        //     idOfEntity: comment.id
+        // }).lean()
+        //
+        // if (myLikeForComment) {
+        //     result.likesInfo.myStatus = myLikeForComment.status
+        // }
         return result
     }
 }

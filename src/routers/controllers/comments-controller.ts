@@ -57,13 +57,10 @@ export class CommentsController {
     }
 
     async makeLikeOrUnlike(req: Request, res: Response) {
-
             const comment = await this.commentsQueryRepository.getCommentById(new ObjectId(req.params.id))
             if (!comment) return res.sendStatus(404)
             const userId: ObjectId | null = await extractUserIdFromHeaders(req)
             await this.commentsService.makeLikeOrUnlike(new ObjectId(req.params.commentId), userId!, req.body.likeStatus)
             return res.sendStatus(204)
-
-
     }
 }
