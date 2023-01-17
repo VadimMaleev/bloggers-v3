@@ -22,8 +22,6 @@ export class CommentsService {
             new Date(),
             postId
         )
-        await this.commentsRepository.createComment(newComment)
-
         return await this.commentsRepository.createComment(newComment)
         }
 
