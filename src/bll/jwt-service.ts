@@ -46,25 +46,4 @@ export class JWTService {
             return null
         }
     }
-
-    // async extractDeviceIdFromRefreshToken(refreshToken: string): Promise<string | null> {
-    //     try {
-    //         const result: any = jwt.verify(refreshToken, settings.JWT_SECRET)
-    //         return result.deviceId
-    //     } catch (error) {
-    //         return null
-    //     }
-    // }
-
-    // async expireRefreshToken(refreshToken: string) {
-    //     const token = {
-    //         _id: new ObjectId,
-    //         refreshToken: refreshToken
-    //     }
-    //     await this.jwtRepository.expireRefreshToken(token)
-    // }
-
-    // async findExpiredToken(token: string): Promise <TokenType | null> {
-    //     return await this.jwtRepository.findAllExpiredTokens(token)
-    // }
 }

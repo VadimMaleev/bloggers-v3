@@ -73,7 +73,7 @@ const likesSchema = new mongoose.Schema<LikeForRepoClass>({
     entity: String,
     idOfEntity: ObjectId,
     userId: ObjectId,
-    login: String,
+    userLogin: String,
     addedAt: Date,
     status: String
 })

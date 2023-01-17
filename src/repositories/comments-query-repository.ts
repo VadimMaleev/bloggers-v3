@@ -1,7 +1,8 @@
 import {injectable} from "inversify";
 import {ObjectId} from "mongodb";
-import {CommentsModel} from "../schemas/mongoose-schemas";
-import {CommentForResponse, CommentsPagType} from "../types/types";
+import {CommentsModel, LikesModel} from "../schemas/mongoose-schemas";
+import {CommentForResponse, CommentsPagType, LikeForRepoClass} from "../types/types";
+import {mapComment} from "../helpers/helper";
 
 @injectable()
 
@@ -11,12 +12,26 @@ export class CommentsQueryRepository {
     ) {
     }
 
-    async getCommentsForPost (postId: ObjectId, page: number, pageSize: number, sortBy: string, sortDirection: "asc" | "desc"): Promise<CommentsPagType> {
-        const items = await CommentsModel.find({postId: postId}, {_id: 0, postId: 0})
+    async getCommentsForPost (postId: ObjectId, page: number, pageSize: number, sortBy: string, sortDirection: "asc" | "desc", userId: ObjectId | null): Promise<CommentsPagType> {
+        const item = await CommentsModel.find({postId: postId}, {_id: 0, postId: 0})
             .sort({[sortBy]: sortDirection}).select({})
             .skip((page - 1) * pageSize).limit(pageSize).lean()
-        //найти лайки
-        //фильтр для
+        const items = await Promise.all(item.map(async i => {
+            const result: CommentForResponse = await mapComment(i)
+            let myLikeForComment: LikeForRepoClass | null = null
+            if (!userId) {
+                return result
+            }
+            myLikeForComment = await LikesModel.findOne({
+                userId: userId,
+                idOfEntity: i.id
+            }).lean()
+
+            if (myLikeForComment) {
+                result.likesInfo.myStatus = myLikeForComment.status
+            }
+            return result
+        }))
 
         return {
             pagesCount: Math.ceil(await CommentsModel.count({'postId': postId}) / pageSize),
@@ -27,7 +42,22 @@ export class CommentsQueryRepository {
         }
     }
 
-    async getCommentById (id: ObjectId): Promise<CommentForResponse | null> {
-        return CommentsModel.findOne({id: id}, {_id: 0, postId: 0})
+    async getCommentById (id: ObjectId, userId?: ObjectId | null): Promise<CommentForResponse | null> {
+        const comment = await CommentsModel.findOne({id: id})
+        if (!comment) return null
+        const result: CommentForResponse = await mapComment(comment)
+        let myLikeForComment: LikeForRepoClass | null = null
+        if (!userId) {
+            return result
+        }
+        myLikeForComment = await LikesModel.findOne({
+            userId: userId,
+            idOfEntity: comment.id
+        }).lean()
+
+        if (myLikeForComment) {
+            result.likesInfo.myStatus = myLikeForComment.status
+        }
+        return result
     }
 }

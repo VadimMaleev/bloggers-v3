@@ -7,6 +7,7 @@ import {ObjectId} from "mongodb";
 import {BlogsQueryRepository} from "../../repositories/blogs-query-repository";
 import {CommentsService} from "../../bll/comments-service";
 import {CommentsQueryRepository} from "../../repositories/comments-query-repository";
+import {extractUserIdFromHeaders} from "../../helpers/helper";
 
 @injectable()
 export class PostsController {
@@ -84,6 +85,7 @@ export class PostsController {
 
     async getCommentsForPost (req: Request, res: Response) {
         try {
+            const userId = await extractUserIdFromHeaders(req)
             const page = isNaN(Number(req.query.pageNumber)) ? 1 : +req.query.pageNumber!
             const pageSize = isNaN(Number(req.query.pageSize)) ? 10 : +req.query.pageSize!
             const sortBy = req.query.sortBy?.toString() || "createdAt"
@@ -95,7 +97,7 @@ export class PostsController {
             const post = await this.postsQueryRepository.getOnePostById(new ObjectId(req.params.id))
             if (!post) return res.sendStatus(404)
             const comments = await this.commentsQueryRepository.getCommentsForPost(new ObjectId(req.params.id),
-                page, pageSize, sortBy, sortDirection)
+                page, pageSize, sortBy, sortDirection, userId)
             return res.status(200).send(comments)
         } catch (e) {
             res.sendStatus(404)

@@ -86,7 +86,6 @@ export class CommentClass {
         public userLogin: string,
         public createdAt: Date,
         public postId: ObjectId,
-        public likesInfo: LikesInfoClass
     ) {     }
 }
 
@@ -138,11 +137,13 @@ export class LikeForRepoClass {
         public entity: string,
         public idOfEntity: ObjectId,
         public userId: ObjectId,
-        public login: string,
+        public userLogin: string,
         public addedAt: Date,
-        public status: "Like" | "Dislike" | "None"
+        public status: LikeType
     ) {
     }
 }
+
+export type LikeType = "Like" | "Dislike" | "None"
 
 

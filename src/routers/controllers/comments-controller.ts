@@ -3,6 +3,7 @@ import {Request, Response} from "express";
 import {CommentsQueryRepository} from "../../repositories/comments-query-repository";
 import {ObjectId} from "mongodb";
 import {CommentsService} from "../../bll/comments-service";
+import {extractUserIdFromHeaders} from "../../helpers/helper";
 
 @injectable()
 
@@ -15,7 +16,11 @@ export class CommentsController {
 
     async getCommentById (req: Request, res: Response) {
         try {
-            const comment = await this.commentsQueryRepository.getCommentById(new ObjectId(req.params.id))
+            let userId: ObjectId | null = null
+            if (req.headers.authorization) {
+                userId = await extractUserIdFromHeaders(req)
+            }
+            const comment = await this.commentsQueryRepository.getCommentById(new ObjectId(req.params.id), userId)
             if(!comment) return res.sendStatus(404)
             res.status(200).send(comment)
         } catch (e) {
@@ -49,5 +54,18 @@ export class CommentsController {
         } catch (e) {
             res.sendStatus(404)
         }
+    }
+
+    async makeLikeOrUnlike(req: Request, res: Response) {
+        try {
+            const comment = await this.commentsQueryRepository.getCommentById(new ObjectId(req.params.id))
+            if (!comment) return res.sendStatus(404)
+            const userId: ObjectId | null = await extractUserIdFromHeaders(req)
+            await this.commentsService.makeLikeOrUnlike(new ObjectId(req.params.commentId), userId!, req.body.likeStatus)
+            return res.sendStatus(204)
+        } catch (e) {
+            res.sendStatus(404)
+        }
+
     }
 }
