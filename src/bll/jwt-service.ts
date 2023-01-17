@@ -15,12 +15,12 @@ export class JWTService {
     }
 
     async createJWT(user: UserClass) {
-        return jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '5d'})
+        return jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '5m'})
     }
 
     async createRefreshJWT(user: UserClass, deviceId: string) {
 
-        return jwt.sign({userId: user.id, deviceId: deviceId}, settings.JWT_SECRET, {expiresIn: '10d'})
+        return jwt.sign({userId: user.id, deviceId: deviceId}, settings.JWT_SECRET, {expiresIn: '10m'})
 
     }
 

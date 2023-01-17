@@ -50,14 +50,14 @@ export class CommentsQueryRepository {
         if (!userId) {
             return result
         }
-        // myLikeForComment = await LikesModel.findOne({
-        //     userId: userId,
-        //     idOfEntity: comment.id
-        // }).lean()
-        //
-        // if (myLikeForComment) {
-        //     result.likesInfo.myStatus = myLikeForComment.status
-        // }
+        myLikeForComment = await LikesModel.findOne({
+            userId: userId,
+            idOfEntity: comment.id
+        }).lean()
+
+        if (myLikeForComment) {
+            result.likesInfo.myStatus = myLikeForComment.status
+        }
         return result
     }
 }
