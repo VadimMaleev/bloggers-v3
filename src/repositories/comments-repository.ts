@@ -13,7 +13,8 @@ export class CommentsRepository {
     }
 
     async createComment (newComment: CommentClass) {
-        await CommentsModel.insertMany(newComment)
+        const commentInstance = new CommentsModel(newComment)
+        await commentInstance.save()
         return mapComment(newComment)
     }
 
