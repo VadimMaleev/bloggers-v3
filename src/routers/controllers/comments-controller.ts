@@ -15,7 +15,7 @@ export class CommentsController {
     }
 
     async getCommentById (req: Request, res: Response) {
-
+        try {
             let userId: ObjectId | null = null
             if (req.headers.authorization) {
                 userId = await extractUserIdFromHeaders(req)
@@ -23,6 +23,9 @@ export class CommentsController {
             const comment = await this.commentsQueryRepository.getCommentById(new ObjectId(req.params.id), userId)
             if(!comment) return res.sendStatus(404)
             res.status(200).send(comment)
+        } catch (e) {
+            res.sendStatus(404)
+        }
     }
 
     async updateComment (req: Request, res: Response) {
@@ -54,15 +57,13 @@ export class CommentsController {
     }
 
     async makeLikeOrUnlike(req: Request, res: Response) {
-        try {
+
             const comment = await this.commentsQueryRepository.getCommentById(new ObjectId(req.params.id))
             if (!comment) return res.sendStatus(404)
             const userId: ObjectId | null = await extractUserIdFromHeaders(req)
             await this.commentsService.makeLikeOrUnlike(new ObjectId(req.params.commentId), userId!, req.body.likeStatus)
             return res.sendStatus(204)
-        } catch (e) {
-            res.sendStatus(404)
-        }
+
 
     }
 }
