@@ -60,8 +60,4 @@ export class CommentsQueryRepository {
         }
         return result
     }
-
-    async getCommentWithoutLikes (commentId: ObjectId) {
-        return CommentsModel.findOne({id: commentId})
-    }
 }

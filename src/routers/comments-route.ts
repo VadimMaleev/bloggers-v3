@@ -28,7 +28,7 @@ commentsRouter.delete('/:id',
     jwtAuthMiddleware,
     deleteComment)
 
-commentsRouter.put('/:commentId/like-status',
+commentsRouter.put('/:id/like-status',
     jwtAuthMiddleware,
     likeInputValidation,
     errorsMiddleware,
