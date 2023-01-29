@@ -21,6 +21,7 @@ export class PostsController {
     }
 
     async getPosts(req: Request, res: Response) {
+        const userId: ObjectId | null = await extractUserIdFromHeaders(req)
         const page = isNaN(Number(req.query.pageNumber)) ? 1 : +req.query.pageNumber!
         const pageSize = isNaN(Number(req.query.pageSize)) ? 10 : +req.query.pageSize!
         const sortBy = req.query.sortBy?.toString() || "createdAt"
@@ -29,13 +30,14 @@ export class PostsController {
             sortDirection = "asc"
         }
 
-        const posts = await this.postsQueryRepository.getPosts(page, pageSize, sortBy, sortDirection)
+        const posts = await this.postsQueryRepository.getPosts(page, pageSize, sortBy, sortDirection, userId)
         return res.status(200).send(posts)
     }
 
     async getOnePostById(req: Request, res: Response) {
         try {
-            const post = await this.postsQueryRepository.getOnePostById(new ObjectId(req.params.id))
+            const userId: ObjectId | null = await extractUserIdFromHeaders(req)
+            const post = await this.postsQueryRepository.getOnePostById(new ObjectId(req.params.id), userId)
             if (!post) return res.sendStatus(404)
             return res.status(200).send(post)
         } catch (e) {
@@ -102,5 +104,13 @@ export class PostsController {
         } catch (e) {
             res.sendStatus(404)
         }
+    }
+
+    async makeLikeOrUnlikeForPost (req: Request, res: Response) {
+        const post = await this.postsQueryRepository.getOnePostById(new ObjectId(req.params.id))
+        if (!post) return res.sendStatus(404)
+        const userId: ObjectId | null = await extractUserIdFromHeaders(req)
+        await this.postsService.makeLikeOrUnlike(new ObjectId(req.params.id), userId!, req.body.likeStatus)
+        return res.sendStatus(204)
     }
 }

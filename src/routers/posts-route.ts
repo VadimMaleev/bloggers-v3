@@ -11,6 +11,7 @@ import {
 import {errorsMiddleware} from "../middlewares/errors-validation-middleware";
 import {jwtAuthMiddleware} from "../middlewares/jwt-auth-middleware";
 import {commentsValidation} from "../middlewares/comment-validation-middleware";
+import {likeInputValidation, likeValidationMiddleware} from "../middlewares/like-validation-middleware";
 
 
 export const postsRouter = Router({})
@@ -24,6 +25,7 @@ const updatePost = postsController.updatePost.bind(postsController)
 const deletePost = postsController.deletePost.bind(postsController)
 const createComment = postsController.createComment.bind(postsController)
 const getCommentsForPost = postsController.getCommentsForPost.bind(postsController)
+const makeLikeOrUnlikeForPost = postsController.makeLikeOrUnlikeForPost.bind(postsController)
 
 postsRouter.get('/', getPosts)
 
@@ -60,4 +62,12 @@ postsRouter.post('/:id/comments',
 
 postsRouter.get('/:id/comments',
     getCommentsForPost)
+
+postsRouter.put('/:id/like-status',
+    jwtAuthMiddleware,
+    likeInputValidation,
+    errorsMiddleware,
+    likeValidationMiddleware,
+    makeLikeOrUnlikeForPost
+    )
 

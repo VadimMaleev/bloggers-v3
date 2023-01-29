@@ -16,6 +16,7 @@ export class CommentsQueryRepository {
         const item = await CommentsModel.find({postId: postId}, {_id: 0, postId: 0})
             .sort({[sortBy]: sortDirection}).select({})
             .skip((page - 1) * pageSize).limit(pageSize).lean()
+
         const items = await Promise.all(item.map(async i => {
             const result: CommentForResponse = await mapComment(i)
             let myLikeForComment: LikeForRepoClass | null = null

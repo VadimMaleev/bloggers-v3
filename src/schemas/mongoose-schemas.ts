@@ -76,7 +76,7 @@ const likesSchema = new mongoose.Schema<LikeForRepoClass>({
     userLogin: String,
     addedAt: Date,
     status: String
-})
+}, {versionKey: false})
 
 export const BlogsModel = mongoose.model('blogs', blogsSchema)
 export const PostsModel = mongoose.model('posts', postsSchema)

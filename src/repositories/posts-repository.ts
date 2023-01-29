@@ -1,7 +1,7 @@
 import "reflect-metadata"
-import {PostClass} from "../types/types";
+import {LikeForRepoClass, LikeType, PostClass} from "../types/types";
 import {ObjectId} from "mongodb";
-import {PostsModel} from "../schemas/mongoose-schemas";
+import {LikesModel, PostsModel} from "../schemas/mongoose-schemas";
 import {injectable} from "inversify";
 
 @injectable()
@@ -9,13 +9,8 @@ export class PostsRepository {
     constructor() {
     }
 
-    async createPost(newPost: PostClass): Promise<PostClass> {
-        const postForDB = {
-            _id: new ObjectId(),
-            ...newPost
-        }
-        await PostsModel.insertMany(postForDB)
-        return newPost
+    async createPost(newPost: PostClass) {
+        await PostsModel.create(newPost)
     }
 
     async updatePost (postId: ObjectId, title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<boolean> {
@@ -34,6 +29,30 @@ export class PostsRepository {
         const postInstance = await PostsModel.findOne({id:id})
         if (!postInstance) return false
         await postInstance.deleteOne()
+        return true
+    }
+
+    async makeLikeOrUnlike(postId: ObjectId, userId: ObjectId, login: string, likeStatus: LikeType) {
+        const like: LikeForRepoClass | undefined =  await LikesModel.findOne({idOfEntity: postId, userId: userId})
+        if (!like) {
+            const likeOrUnlike = new LikeForRepoClass(
+                new ObjectId(),
+                'post',
+                postId,
+                userId,
+                login,
+                new Date(),
+                likeStatus
+            )
+            await LikesModel.insertMany(likeOrUnlike)
+        }
+
+        if (like && like.status !== likeStatus) {
+            const like = await LikesModel.findOne({idOfEntity: postId, userId: userId})
+            like!.status = likeStatus as LikeType
+            like!.addedAt = new Date()
+            await like!.save()
+        }
         return true
     }
 }

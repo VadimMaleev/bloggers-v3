@@ -6,6 +6,7 @@ import {ObjectId} from "mongodb";
 import {PostsService} from "../../bll/posts-service";
 import {PostsPagType} from "../../types/types";
 import {PostsQueryRepository} from "../../repositories/posts-query-repository";
+import {extractUserIdFromHeaders} from "../../helpers/helper";
 
 
 @injectable()
@@ -92,6 +93,7 @@ export class BlogsController {
 
     async getPostsForBlog (req: Request, res: Response) {
         try {
+            const userId = await extractUserIdFromHeaders(req)
             const pageNumber = isNaN(Number(req.query.pageNumber)) ? 1 : +req.query.pageNumber!
             const pageSize = isNaN(Number(req.query.pageSize)) ? 10 : +req.query.pageSize!
             const sortBy = req.query.sortBy?.toString() || "createdAt"
@@ -100,7 +102,7 @@ export class BlogsController {
                 sortDirection = "asc"
             }
 
-            const postByBlogger: PostsPagType | null = await this.postsQueryRepository.getPostsForBlog(pageNumber, pageSize, new ObjectId(req.params.id), sortBy, sortDirection)
+            const postByBlogger: PostsPagType | null = await this.postsQueryRepository.getPostsForBlog(pageNumber, pageSize, new ObjectId(req.params.id), sortBy, sortDirection, userId)
             if (!postByBlogger) return res.sendStatus(404)
              res.status(200).send(postByBlogger)
         } catch (e) {

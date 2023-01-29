@@ -1,19 +1,22 @@
 import "reflect-metadata"
 import {inject, injectable} from "inversify";
-import {PostClass} from "../types/types";
+import {LikeType, PostClass, PostForResponse} from "../types/types";
 import {BlogsQueryRepository} from "../repositories/blogs-query-repository";
 import {ObjectId} from "mongodb";
 import {PostsRepository} from "../repositories/posts-repository";
+import {mapPostExtendedLikesInfo} from "../helpers/helper";
+import {UsersQueryRepository} from "../repositories/users-query-repository";
 
 @injectable()
 export class PostsService {
     constructor(
         @inject('pr') protected postsRepository: PostsRepository,
-        @inject('bqr') protected blogsQueryRepository: BlogsQueryRepository
+        @inject('bqr') protected blogsQueryRepository: BlogsQueryRepository,
+        @inject('uqr') protected usersQueryRepository: UsersQueryRepository
     ) {
     }
 
-    async createPost(title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<PostClass | null> {
+    async createPost(title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<PostForResponse | null> {
         const blog =  await this.blogsQueryRepository.getOneBlogById(blogId)
         if (!blog) return null
         const newPost = new PostClass(
@@ -25,7 +28,8 @@ export class PostsService {
             blog.name,
             new Date()
         )
-        return await this.postsRepository.createPost(newPost)
+        await this.postsRepository.createPost(newPost)
+        return mapPostExtendedLikesInfo(newPost)
     }
 
     async updatePost (postId: ObjectId, title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<boolean> {
@@ -34,5 +38,10 @@ export class PostsService {
 
     async deletePost(id: ObjectId): Promise<boolean> {
         return this.postsRepository.deletePost(id)
+    }
+
+    async makeLikeOrUnlike(postId: ObjectId, userId: ObjectId, likeStatus: LikeType): Promise<boolean> {
+        const user = await this.usersQueryRepository.findUserById(userId!)
+        return await this.postsRepository.makeLikeOrUnlike(postId, userId, user!.login, likeStatus)
     }
 }

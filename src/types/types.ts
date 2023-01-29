@@ -51,7 +51,7 @@ export type PostsPagType = {
     page: number
     pageSize: number
     totalCount: number
-    items: PostClass[]
+    items: PostForResponse[]
 }
 
 export type UserForResponse = {
@@ -78,6 +78,19 @@ export class LikesInfoClass {
     }
 }
 
+export type NewestLikesType = {
+    addedAt: Date
+    userId: string
+    login: string
+}
+
+export type ExtendedLikesInfoType = {
+    likesCount: number
+    dislikesCount: number
+    myStatus: LikeType
+    newestLikes: NewestLikesType
+}
+
 export class CommentClass {
     constructor(
         public id: ObjectId,
@@ -96,6 +109,17 @@ export type CommentForResponse = {
     userLogin: string,
     createdAt: Date,
     likesInfo: LikesInfoClass
+}
+
+export type PostForResponse = {
+    id: ObjectId
+    title: string
+    shortDescription: string
+    content: string
+    blogId: ObjectId
+    blogName: string
+    createdAt: Date
+    extendedLikesInfo: ExtendedLikesInfoType
 }
 
 export type CommentsPagType = {
