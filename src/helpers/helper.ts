@@ -15,7 +15,7 @@ export const extractUserIdFromHeaders = async (req: Request): Promise<ObjectId |
     return null
 }
 
-export const mapPostExtendedLikesInfo = async (post: PostClass): Promise<PostForResponse> => ({
+export const mapPostExtendedLikesInfo = async (post: PostClass) => ({
     id: post.id,
     title: post.title,
     shortDescription: post.shortDescription,

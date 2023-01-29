@@ -28,8 +28,8 @@ export class PostsService {
             blog.name,
             new Date()
         )
-        await this.postsRepository.createPost(newPost)
-        return mapPostExtendedLikesInfo(newPost)
+        return await this.postsRepository.createPost(newPost)
+
     }
 
     async updatePost (postId: ObjectId, title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<boolean> {

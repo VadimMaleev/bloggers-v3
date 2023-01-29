@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import {Router} from "express";
 import {BlogsController} from "./controllers/blogs-controller";
 import {container} from "../composition-root";

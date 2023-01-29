@@ -66,5 +66,6 @@ container.bind<DevicesRepository>('dr').to(DevicesRepository)
 container.bind<DevicesQueryRepository>('dqr').to(DevicesQueryRepository)
 
 container.bind<RecoveryCodesRepository>('rcr').to(RecoveryCodesRepository)
-container.bind<LikesRepository>('lr').to(LikesRepository)
+//container.bind<LikesRepository>('lr').to(LikesRepository)
+
 

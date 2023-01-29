@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import {injectable} from "inversify";
 import {BlogsModel, LikesModel, PostsModel} from "../schemas/mongoose-schemas";
 import {LikeForRepoClass, PostForResponse, PostsPagType} from "../types/types";

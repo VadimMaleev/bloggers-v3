@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import {inject, injectable} from "inversify";
 import {Request, Response} from "express";
 import {BlogsService} from "../../bll/blogs-service";

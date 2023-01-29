@@ -3,6 +3,7 @@ import {LikeForRepoClass, LikeType, PostClass} from "../types/types";
 import {ObjectId} from "mongodb";
 import {LikesModel, PostsModel} from "../schemas/mongoose-schemas";
 import {injectable} from "inversify";
+import {mapPostExtendedLikesInfo} from "../helpers/helper";
 
 @injectable()
 export class PostsRepository {
@@ -10,7 +11,9 @@ export class PostsRepository {
     }
 
     async createPost(newPost: PostClass) {
-        await PostsModel.create(newPost)
+        const postInstance = new PostsModel(newPost)
+        await postInstance.save()
+        return mapPostExtendedLikesInfo(newPost)
     }
 
     async updatePost (postId: ObjectId, title: string, shortDescription: string, content: string, blogId: ObjectId): Promise<boolean> {
